@@ -47,14 +47,14 @@ class AppiumService:
 
     # Note that press_for_time is in milli-seconds
     def long_press_at_coords(self, x, y, press_for_time):
-        print("do touch")
+        # print("do touch")
         action = TouchAction(self.driver)
         action.long_press(x=x, y=y, duration=press_for_time)
         action.perform()
-        print("after touch")
+        # print("after touch")
 
     def tap_at_coords(self, x, y, count):
-        print("do tap")
+        # print("do tap")
         action = TouchAction(self.driver)
         action.tap(x=x, y=y, count=count)
         action.perform()

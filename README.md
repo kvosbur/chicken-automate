@@ -1,9 +1,8 @@
 #Improvements for current implementation
 - detect return screen and tap to close on start
-- have chicken run recover if I interact with the app
 
 #Priorities of features to do in game
-- do chicken runs (basic image parse, Appium)
+- (DONE) do chicken runs (basic image parse, Appium)
     - Figure out if hatchery is empty and decide whether to continue or not
 - farm upgrades (dumb) (basic image parse, Appium)
     - find first set of upgrades that aren't finished. If any are green then click them
@@ -14,12 +13,12 @@
     - figure out current money
     - buy upgrades as the money is available
     - weight upgrades by importance
-- do artifact missions (OCR, Appium)
 - upgrade farm (basic image parse, Appium)
     - detect when farm is ready to be finished
     - start next farm
 - enable auto prestige (OCR?, Appium)
     - figure out metrics to decide when I should prestige
+- do artifact missions (OCR, Appium)
 - take down the drones :) (?????, Appium)
 
 

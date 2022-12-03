@@ -1,7 +1,7 @@
 import time
 from Transformations.Util.FileManager import File_Manager_Instance
 from Transformations.TransformationImage import TransformationImage
-from .chickenRun import do_action
+from .chickenRun import ChickenRun
 import subprocess
 import os
 from appiumService import AppiumService
@@ -11,6 +11,7 @@ last_done = {}
 cycle_events = {
     "chickenRun": 0
 }
+chicken_run = ChickenRun()
 images_identifier = ""
 images_directory = os.path.join(os.path.dirname(__file__), "..", "images")
 
@@ -39,10 +40,11 @@ def take_screenshot() -> TransformationImage:
 
 
 def do_cycle(appium_service):
+    global chicken_run
     now = time.time()
     next_image = take_screenshot()
     if now - last_done["chickenRun"] >= cycle_events["chickenRun"]:
-        do_action(next_image, appium_service)
+        chicken_run.do_action(next_image, appium_service)
         last_done["chickenRun"] = now
 
 
