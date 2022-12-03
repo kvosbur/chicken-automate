@@ -2,3 +2,4 @@ pytesseract
 pillow
 opencv-python
 Appium-Python-Client
+matplotlib

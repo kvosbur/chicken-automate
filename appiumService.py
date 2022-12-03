@@ -23,7 +23,7 @@ ANDROID_BASE_CAPS = {
     # 'deviceName': os.getenv('ANDROID_DEVICE_VERSION') or 'Android Emulator',
     'name': 'test-session',
     'appPackage': 'com.auxbrain.egginc',
-    'app': '/Users/kvosburgh_mac/Desktop/Personal Projects/chicken-optim/eggInc.apk',
+    'app': os.path.join(os.path.dirname(__file__), "eggInc.apk"),
     'udid': 'RFCT70B6C8P',
     'appActivity': 'com.auxbrain.egginc.EggIncActivity',
     'newCommandTimeout': 600,

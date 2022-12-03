@@ -1,8 +1,8 @@
-Improvements for current implementation
+#Improvements for current implementation
 - detect return screen and tap to close on start
 - have chicken run recover if I interact with the app
 
-* Priorities of features to do in game
+#Priorities of features to do in game
 - do chicken runs (basic image parse, Appium)
     - Figure out if hatchery is empty and decide whether to continue or not
 - farm upgrades (dumb) (basic image parse, Appium)
@@ -23,8 +23,13 @@ Improvements for current implementation
 - take down the drones :) (?????, Appium)
 
 
-Learned items:
+#Learned items:
 - Must have app closed before starting appium client (otherwise app will crash / freeze)
 - long_press will continue to press at the location until you press somewhere else (only tried with real phone)
 - long_press is synchronous code for the duration given
 - disconnect from image size and screen size. (uggghhhhh)
+
+
+#Setup Notes:
+- Appium must be running on your machine
+- Setup notes for the Appium server is [here](https://appium.io/docs/en/about-appium/getting-started/?lang=en) 
