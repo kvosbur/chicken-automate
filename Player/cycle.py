@@ -2,6 +2,7 @@ import time
 from Transformations.Util.FileManager import File_Manager_Instance
 from Transformations.TransformationImage import TransformationImage
 from .chickenRun import ChickenRun
+from .research import Research
 import subprocess
 import os
 from appiumService import AppiumService
@@ -56,9 +57,10 @@ def run_player(appium_service: AppiumService):
         time.sleep(1)
 
 
-def run_test(appium_service: AppiumService):
-    print("wait for startup")
-    time.sleep(5)
-    initialize()
-    next_image = TransformationImage("images/1669165921.086634.png", images_identifier)
-    do_action(next_image, appium_service)
+def run_test():
+    # print("wait for startup")
+    # time.sleep(5)
+    # initialize()
+    next_image = TransformationImage(os.path.join(images_directory, "..", "research1.png"), images_identifier)
+    research = Research()
+    research.do_action(next_image)

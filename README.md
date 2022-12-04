@@ -1,5 +1,17 @@
+#Noticed Bugs
+- Occasionally when I have interacted with the app, it gets stuck in a held down state which if not helped will result in an appium crash
+  - It is probably due to my interference and am unsure if I can actually prevent this besides just stopping from doing any actions when nothing is happening
+
 #Improvements for current implementation
 - detect return screen and tap to close on start
+- periodically cleanup images
+
+
+#Next To Do
+- Every 30 seconds open up the research panel
+- if it is finished scroll one down (then repeat previous)
+- tap all researchable items
+- Leave research screen
 
 #Priorities of features to do in game
 - (DONE) do chicken runs (basic image parse, Appium)
