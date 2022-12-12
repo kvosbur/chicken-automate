@@ -45,13 +45,13 @@ class ChickenRun:
         return True
 
     def toggle_on(self, appium_service: AppiumService):
-        print("Toggle ON")
+        print("Toggle Chicken Run ON")
         button_coords = (500, 2140)
         self.toggled_on = True
         appium_service.long_press_at_coords(button_coords[0], button_coords[1], 1)
 
     def toggle_off(self, appium_service: AppiumService):
-        print("Toggle OFF")
+        print("Toggle Chicken Run OFF")
         self.toggled_on = False
         appium_service.tap_at_coords(500, 2000, 1)
 
@@ -73,7 +73,3 @@ class ChickenRun:
             self.toggle_off(appium_service)
 
         self.prev_hatchery_percent = hatch_perc
-
-        # for i in range (0, 2160, 50):
-        #     print(i)
-        #     appium_service.long_press_at_coords(50, i, 2000)

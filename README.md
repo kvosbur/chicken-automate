@@ -8,7 +8,7 @@
 
 
 #Next To Do
-- 
+- Get chicken run and research to run together
 
 #Priorities of features to do in game
 - (DONE) do chicken runs (basic image parse, Appium)

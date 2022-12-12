@@ -6,29 +6,21 @@ from .research import Research
 import subprocess
 import os
 from appiumService import AppiumService
+import shutil
 
-last_done = {}
-
-cycle_events = {
-    "chickenRun": 0
-}
 chicken_run = ChickenRun()
 research = Research()
 images_identifier = ""
 images_directory = os.path.join(os.path.dirname(__file__), "..", "images")
 
 
-def initializeLastDone():
-    global last_done
-    for key in cycle_events.keys():
-        last_done[key] = time.time()
-
-
 def initialize():
     global images_identifier
-    File_Manager_Instance._setup()
+    # File_Manager_Instance._setup()
     images_identifier = File_Manager_Instance.generate_group_identifier()
-    initializeLastDone()
+    if os.path.isdir(images_directory):
+        shutil.rmtree(images_directory)
+        os.mkdir(images_directory)
 
 
 def take_screenshot() -> TransformationImage:
@@ -37,18 +29,15 @@ def take_screenshot() -> TransformationImage:
     file = open(file_path, "w")
     process = subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=file)
     file.close()
-    print(time.time() - before)
+    print("time to get next screenshot:", time.time() - before)
     return TransformationImage(file_path, images_identifier)
 
 
 def do_cycle(appium_service):
     global chicken_run
-    now = time.time()
     next_image = take_screenshot()
-    if now - last_done["chickenRun"] >= cycle_events["chickenRun"]:
-        # chicken_run.do_action(next_image, appium_service)
-        research.do_action(next_image, appium_service)
-        last_done["chickenRun"] = now
+    chicken_run.do_action(next_image, appium_service)
+    research.do_action(next_image, appium_service)
 
 
 def run_player(appium_service: AppiumService):
