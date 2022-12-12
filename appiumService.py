@@ -37,28 +37,72 @@ ANDROID_BASE_CAPS = {
 
 EXECUTOR = 'http://127.0.0.1:4723/wd/hub'
 
+
 class AppiumService:
+
+    long_press_coords: List[List[int]]
+    tap_coords: List[List[int]]
+    reapply_long_press: bool
+    # used to try and get faster feedback for ongoing flows
+    ignore_other_actions: bool
 
     def __init__(self) -> None:
         self.driver = webdriver.Remote(
             command_executor=EXECUTOR,
             desired_capabilities=ANDROID_BASE_CAPS
         )
+        self.long_press_coords = []
+        self.tap_coords = []
+        self.reapply_long_press = True
+        self.ignore_other_actions = False
         print("done initializing")
 
     # Note that press_for_time is in milli-seconds
-    def long_press_at_coords(self, x, y, press_for_time):
-        print("do touch", x, y, self.driver.get_window_size())
-        action = TouchAction(self.driver)
-        action.long_press(x=x, y=y, duration=press_for_time)
-        action.perform()
-        # print("after touch")
+    def add_long_press_at_coords(self, x, y):
+        # don't add coords if they have already been added. Shouldn't happen but the check is for just in case
+        for coords in self.long_press_coords:
+            if coords[0] == x and coords[1] == y:
+                return
+        self.reapply_long_press = True
+        self.long_press_coords.append([x, y])
 
-    def tap_at_coords(self, x, y, count=1):
-        print("do tap", x, y, self.driver.get_window_size())
+    def remove_long_press_at_coords(self, x, y):
+        self.reapply_long_press = True
+        for coord_index in range(len(self.long_press_coords)):
+            current = self.long_press_coords[coord_index]
+            if current[0] == x and current[1] == y:
+                del self.long_press_coords[coord_index]
+                return
+
+    def add_tap_at_coords(self, x, y):
+        # don't add coords if they have already been added. Shouldn't happen but the check is for just in case
+        for coords in self.tap_coords:
+            if coords[0] == x and coords[1] == y:
+                return
+        self.tap_coords.append([x, y])
+
+    def _long_press_at_coords(self):
+        if len(self.long_press_coords) == 0 or not self.reapply_long_press:
+            return
+
+        print("APPIUM: long_press", self.reapply_long_press)
         action = TouchAction(self.driver)
-        action.tap(x=x, y=y, count=count)
+        for coord in self.long_press_coords:
+            print('\t', coord)
+            action.long_press(x=coord[0], y=coord[1], duration=1)
         action.perform()
+
+    def _tap_at_coords(self):
+        if len(self.tap_coords) == 0:
+            return
+        print("APPIUM: tapping")
+        action = TouchAction(self.driver)
+        for coord in self.tap_coords:
+            print('\t', coord)
+            action.tap(x=coord[0], y=coord[1], count=1)
+        action.perform()
+
+        self.reapply_long_press = True
 
     def drag_from_to(self, from_coords, to_coords):
         action = TouchAction(self.driver)
@@ -67,14 +111,28 @@ class AppiumService:
         action.release()
         action.perform()
 
+        self.reapply_long_press = True
+        self.ignore_other_actions = True
+
+    def do_actions(self):
+        if self.ignore_other_actions:
+            self.ignore_other_actions = False
+            self.tap_coords = []
+            return
+        self._tap_at_coords()
+        self.tap_coords = []
+        self._long_press_at_coords()
+        self.reapply_long_press = False
+
     def meaningless_tap(self):
-        self.tap_at_coords(0, 0, 1)
+        self.add_tap_at_coords(0, 2140)
 
     def get_page_source(self) -> str:
         return self.driver.page_source
 
     def cleanup(self):
         self.driver.close_app()
+
 
 if __name__ == "__main__":
     service = AppiumService()

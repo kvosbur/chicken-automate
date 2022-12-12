@@ -88,7 +88,7 @@ class Research:
 
     def toggle_show_research(self, appium_service: AppiumService):
         self.research_shown = not self.research_shown
-        appium_service.tap_at_coords(research_button_coords[0], research_button_coords[1])
+        appium_service.add_tap_at_coords(research_button_coords[0], research_button_coords[1])
         if not self.research_shown:
             self.last_checked = time()
 
@@ -99,6 +99,8 @@ class Research:
         if self.should_show_research():
             print("enter research")
             self.toggle_show_research(appium_service)
+            return
+        elif not self.research_shown:
             return
 
         sections = self.get_research_sections(image)
@@ -125,7 +127,7 @@ class Research:
             if section.state == ResearchState.sufficient:
                 print("tapping research item")
                 coords = section.get_tap_coords()
-                appium_service.tap_at_coords(coords[0], coords[1])
+                appium_service.add_tap_at_coords(coords[0], coords[1])
                 tapped_one = True
 
         if not tapped_one:

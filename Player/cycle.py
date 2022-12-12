@@ -38,6 +38,8 @@ def do_cycle(appium_service):
     next_image = take_screenshot()
     chicken_run.do_action(next_image, appium_service)
     research.do_action(next_image, appium_service)
+    appium_service.do_actions()
+    print('')
 
 
 def run_player(appium_service: AppiumService):
