@@ -2,6 +2,7 @@ import os
 from appium import webdriver
 from appium.webdriver.common.touch_action import TouchAction
 import time
+from typing import List
 
 # https://stackoverflow.com/questions/4032960/how-do-i-get-an-apk-file-from-an-android-device
 # adb shell pm list packages
@@ -53,18 +54,27 @@ class AppiumService:
         action.perform()
         # print("after touch")
 
-    def tap_at_coords(self, x, y, count):
+    def tap_at_coords(self, x, y, count=1):
         print("do tap", x, y, self.driver.get_window_size())
         action = TouchAction(self.driver)
         action.tap(x=x, y=y, count=count)
         action.perform()
+
+    def drag_from_to(self, from_coords, to_coords):
+        action = TouchAction(self.driver)
+        action.press(x=from_coords[0], y=from_coords[1])
+        action.move_to(x=to_coords[0], y=to_coords[1])
+        action.release()
+        action.perform()
+
+    def meaningless_tap(self):
+        self.tap_at_coords(0, 0, 1)
 
     def get_page_source(self) -> str:
         return self.driver.page_source
 
     def cleanup(self):
         self.driver.close_app()
-
 
 if __name__ == "__main__":
     service = AppiumService()

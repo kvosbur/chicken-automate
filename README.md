@@ -8,10 +8,7 @@
 
 
 #Next To Do
-- Every 30 seconds open up the research panel
-- if it is finished scroll one down (then repeat previous)
-- tap all researchable items
-- Leave research screen
+- 
 
 #Priorities of features to do in game
 - (DONE) do chicken runs (basic image parse, Appium)
@@ -38,7 +35,8 @@
 - Must have app closed before starting appium client (otherwise app will crash / freeze)
 - long_press will continue to press at the location until you press somewhere else (only tried with real phone)
 - long_press is synchronous code for the duration given
-- disconnect from image size and screen size. (uggghhhhh)
+- ~~disconnect from image size and screen size. (uggghhhhh)~~
+  - The problem is actually with the accuracy of driver.get_window_size(). It is not correct. Image coords are source of truth
 
 
 #Setup Notes:

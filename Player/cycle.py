@@ -13,6 +13,7 @@ cycle_events = {
     "chickenRun": 0
 }
 chicken_run = ChickenRun()
+research = Research()
 images_identifier = ""
 images_directory = os.path.join(os.path.dirname(__file__), "..", "images")
 
@@ -45,7 +46,8 @@ def do_cycle(appium_service):
     now = time.time()
     next_image = take_screenshot()
     if now - last_done["chickenRun"] >= cycle_events["chickenRun"]:
-        chicken_run.do_action(next_image, appium_service)
+        # chicken_run.do_action(next_image, appium_service)
+        research.do_action(next_image, appium_service)
         last_done["chickenRun"] = now
 
 
@@ -62,5 +64,5 @@ def run_test():
     # time.sleep(5)
     # initialize()
     next_image = TransformationImage(os.path.join(images_directory, "..", "research1.png"), images_identifier)
-    research = Research()
+    # research = Research()
     research.do_action(next_image)
