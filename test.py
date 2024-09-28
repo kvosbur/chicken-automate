@@ -25,13 +25,13 @@ im = ti.get_pil_image()
 # cropped.show()
 # exit()
 
-profile_result_file = "results"
-print("Running profiler")
-cProfile.run("find_boxes_mk2(im, (255, 255, 255), 80)", profile_result_file)
-p = pstats.Stats(profile_result_file)
-p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(40)
-os.remove(profile_result_file)
+# profile_result_file = "results"
+# print("Running profiler")
+# cProfile.run("find_boxes_mk2(im, (255, 255, 255), 80)", profile_result_file)
+# p = pstats.Stats(profile_result_file)
+# p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(40)
+# os.remove(profile_result_file)
 
-# res = find_boxes_mk2(im, (255, 255, 255), 80)
+res = find_boxes_mk2(im, (255, 255, 255), 40)
 
-# putBoxesonImageTuples(ti.get_cv2_image(), res)
+putBoxesonImageTuples(ti.get_cv2_image(), res)

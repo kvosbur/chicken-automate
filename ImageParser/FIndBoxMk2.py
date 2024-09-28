@@ -17,8 +17,23 @@ def find_boxes(
     min_size: int,
 ):
     start = time.time()
+    bools = []
     pixels = pil_image.load()
     width, height = pil_image.size
+    # pre process into bools
+    for x in range(width):
+        bool_row = []
+        for y in range(height):
+            pixel = pixels[x, y]
+            bool_row.append(
+                (
+                    pixel[0] != allowed_color[0]
+                    or pixel[1] != allowed_color[1]
+                    or pixel[2] != allowed_color[2]
+                )
+            )
+        bools.append(bool_row)
+
     boxes = []
     for x in range(width):
         print(
@@ -29,17 +44,17 @@ def find_boxes(
         for y in range(height):
             if overlaps_boxes(x, y, boxes):
                 continue
-            box = find_box(pixels, width, height, allowed_color, min_size, x, y)
+            box = find_box(bools, width, height, allowed_color, min_size, x, y)
             if box is not None:
                 boxes.append(box)
                 print("found_box", x, y, box, len(boxes))
-                if len(boxes) >= 19:
-                    return boxes
+                # if len(boxes) >= 19:
+                #     return boxes
     return boxes
 
 
 def find_box(
-    pixels: tuple[tuple],
+    bools: tuple[tuple[bool]],
     width: int,
     height: int,
     allowed_color: tuple[int],
@@ -50,23 +65,13 @@ def find_box(
 
     # move right
     for x in range(start_x, width):
-        top_pixel = pixels[x, start_y]
-        if (
-            top_pixel[0] != allowed_color[0]
-            or top_pixel[1] != allowed_color[1]
-            or top_pixel[2] != allowed_color[2]
-        ):
+        if bools[x][start_y]:
             break
         if x - start_x < min_size:
             continue
         # move down
         for y in range(start_y, height):
-            right_pixel = pixels[x, y]
-            if (
-                right_pixel[0] != allowed_color[0]
-                or right_pixel[1] != allowed_color[1]
-                or right_pixel[2] != allowed_color[2]
-            ):
+            if bools[x][y]:
                 break
             if y - start_y < min_size:
                 continue
@@ -75,12 +80,7 @@ def find_box(
 
             # verify bottom
             for bottom_x in range(start_x, x):
-                bottom_pixel = pixels[bottom_x, y]
-                if (
-                    bottom_pixel[0] != allowed_color[0]
-                    or bottom_pixel[1] != allowed_color[1]
-                    or bottom_pixel[2] != allowed_color[2]
-                ):
+                if bools[bottom_x][y]:
                     is_correct = False
                     break
             if not is_correct:
@@ -88,12 +88,7 @@ def find_box(
 
             # verify left
             for left_y in range(start_y, y):
-                left_pixel = pixels[start_x, left_y]
-                if (
-                    left_pixel[0] != allowed_color[0]
-                    or left_pixel[1] != allowed_color[1]
-                    or left_pixel[2] != allowed_color[2]
-                ):
+                if bools[start_x][left_y]:
                     is_correct = False
                     break
 
