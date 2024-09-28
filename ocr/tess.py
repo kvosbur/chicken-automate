@@ -107,25 +107,43 @@ def putBoxesonImage(img, boxes):
     cv2.waitKey(0)
 
 
-File_Manager_Instance._setup()
-identifier = File_Manager_Instance.generate_group_identifier()
-image = TransformationImage("screen2.png", identifier)
-# do_threshold_invert(image, 150)
-img = image.get_cv2_image()
+def putBoxesonImageTuples(img, boxes):
+    hImg, _, _ = img.shape
+    for x, y, x2, y2 in boxes:
+        cv2.rectangle(img, (x, y), (x2, y2), (255, 0, 0), 2)
+        # cv2.putText(
+        #     img,
+        #     str(x),
+        #     (x, hImg - y + 13),
+        #     cv2.FONT_HERSHEY_SIMPLEX,
+        #     0.4,
+        #     (50, 205, 50),
+        #     1,
+        # )
+
+    cv2.imshow("Detected text", img)
+    cv2.waitKey(0)
 
 
-res = parseImage(img, TesseractOption.UNIFORM_BLOCK)
-print(res)
-foundUpgrades = []
-for line in res.split("\n"):
-    bestMatch, bestRatio = bestStringMatch(line, allUpgrades)
-    if bestRatio > 0.2:
-        foundUpgrades.append((bestMatch, line))
+if __name__ == "__main__":
 
-pprint.pprint(foundUpgrades)
+    File_Manager_Instance._setup()
+    identifier = File_Manager_Instance.generate_group_identifier()
+    image = TransformationImage("screen2.png", identifier)
+    # do_threshold_invert(image, 150)
+    img = image.get_cv2_image()
 
-# boxes = pytesseract.image_to_boxes(img, config=f'--psm {TesseractOption.UNIFORM_BLOCK.value}')
-# putBoxesonImage(img, boxes)
+    res = parseImage(img, TesseractOption.UNIFORM_BLOCK)
+    print(res)
+    foundUpgrades = []
+    for line in res.split("\n"):
+        bestMatch, bestRatio = bestStringMatch(line, allUpgrades)
+        if bestRatio > 0.2:
+            foundUpgrades.append((bestMatch, line))
 
+    pprint.pprint(foundUpgrades)
 
-File_Manager_Instance.teardown()
+    # boxes = pytesseract.image_to_boxes(img, config=f'--psm {TesseractOption.UNIFORM_BLOCK.value}')
+    # putBoxesonImage(img, boxes)
+
+    File_Manager_Instance.teardown()

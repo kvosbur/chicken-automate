@@ -1,52 +1,37 @@
+from ImageParser.FIndBoxMk2 import find_boxes as find_boxes_mk2
+from Player.cycle import initialize, images_identifier
+from Transformations.TransformationImage import TransformationImage
+from Transformations.Util.FileManager import File_Manager_Instance
+from ocr.tess import putBoxesonImageTuples
+import cProfile
+import pstats
+from pstats import SortKey
 import os
-from appium import webdriver
-import time
 
-# https://stackoverflow.com/questions/4032960/how-do-i-get-an-apk-file-from-an-android-device
-# adb shell pm list packages
-# adb shell pm path com.auxbrain.egginc
-# adb pull /data/app/~~tweXlYiQgWJQJgvXJMtepw==/com.auxbrain.egginc-FWJI9t5kEQOcevIqVQZziA==/base.apk ./eggInc.apk
-# https://stackoverflow.com/questions/12698814/get-launchable-activity-name-of-package-from-adb
-# /Users/kvosburgh_mac/Library/Android/sdk/build-tools/31.0.0/aapt dump configurations eggInc.apk
-# alternative below
-# adb shell pm dump com.auxbrain.egginc | grep -A 1 MAIN
+File_Manager_Instance._setup()
+identifier = File_Manager_Instance.generate_group_identifier()
+ti = TransformationImage("ImageParser/test-image.png", identifier)
+im = ti.get_pil_image()
 
-# get screenshot: adb exec-out screencap -p > screen.png
+# cropped = im.crop((60, 2150, 1000, 2350))
+# print(cropped.getpixel((20, 20)))
+# ti.pil_image = cropped
 
+# for x in range(cropped.size[0]):
+#     for y in range(cropped.size[1]):
+#         if cropped.getpixel((x, y)) != (255, 255, 255, 255):
+#             print(cropped.getpixel((x, y)))
 
-ANDROID_BASE_CAPS = {
-    # 'app': os.path.abspath('../apps/ApiDemos-debug.apk'),
-    'automationName': 'UiAutomator2',
-    'platformName': 'Android',
-    'platformVersion': os.getenv('ANDROID_PLATFORM_VERSION') or '12.0',
-    'deviceName': os.getenv('ANDROID_DEVICE_VERSION') or 'Android Emulator',
-    'name': 'test-session',
-    'appPackage': 'com.auxbrain.egginc',
-    'app': '/Users/kvosburgh_mac/Desktop/Personal Projects/chicken-optim/eggInc.apk',
-    'udid': 'RFCT70B6C8P',
-    'appActivity': 'com.auxbrain.egginc.EggIncActivity',
-    'newCommandTimeout': 600,
-    'noReset': True,
-    'fullReset': False,
-    'dontStopAppOnReset': True,
-    'autoLaunch': True
-}
+# cropped.show()
+# exit()
 
-EXECUTOR = 'http://127.0.0.1:4723/wd/hub'
+profile_result_file = "results"
+print("Running profiler")
+cProfile.run("find_boxes_mk2(im, (255, 255, 255), 80)", profile_result_file)
+p = pstats.Stats(profile_result_file)
+p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(40)
+os.remove(profile_result_file)
 
-driver = webdriver.Remote(
-            command_executor=EXECUTOR,
-            desired_capabilities=ANDROID_BASE_CAPS
-        )
+# res = find_boxes_mk2(im, (255, 255, 255), 80)
 
-print(driver.get_window_size())
-
-# driver.start_activity(ANDROID_BASE_CAPS['appPackage'], ANDROID_BASE_CAPS["appActivity"])
-for i in range(100):
-    time.sleep(5)
-    print("\n\n\n\n BLARG", i)
-    print(driver.page_source)
-
-
-driver.close_app()
-# time.sleep(10000)
+# putBoxesonImageTuples(ti.get_cv2_image(), res)
