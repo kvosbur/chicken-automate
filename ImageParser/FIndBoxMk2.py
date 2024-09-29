@@ -4,10 +4,16 @@ import time
 
 def overlaps_boxes(x, y, boxes):
     for box in boxes:
-        if (0 <= x - box[0] <= 5 and box[1] <= y <= box[3]) or (
-            y == box[1] and box[0] <= x <= box[2]
-        ):
+        if y == box[1] and box[0] <= x <= box[2]:
             return True
+    return False
+
+
+def validate_box(box: tuple[int], bools: tuple[tuple[bool]]):
+    for x in range(box[0], box[2] + 1):
+        for y in range(box[1], box[3] + 1):
+            if bools[x][y]:
+                return True
     return False
 
 
@@ -35,6 +41,7 @@ def find_boxes(
         bools.append(bool_row)
 
     boxes = []
+    all_boxes = []
     for x in range(width):
         print(
             x,
@@ -42,13 +49,15 @@ def find_boxes(
             x / (width - min_size) * 100,
         )
         for y in range(height):
-            if overlaps_boxes(x, y, boxes):
+            if overlaps_boxes(x, y, all_boxes):
                 continue
             box = find_box(bools, width, height, allowed_color, min_size, x, y)
             if box is not None:
-                boxes.append(box)
-                print("found_box", x, y, box, len(boxes))
-                # if len(boxes) >= 19:
+                all_boxes.append(box)
+                if validate_box(box, bools):
+                    boxes.append(box)
+                # print("found_box", x, y, box, len(boxes))
+                # if len(boxes) >= 30:
                 #     return boxes
     return boxes
 

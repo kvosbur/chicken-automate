@@ -7,6 +7,7 @@ import cProfile
 import pstats
 from pstats import SortKey
 import os
+import pprofile
 
 File_Manager_Instance._setup()
 identifier = File_Manager_Instance.generate_group_identifier()
@@ -33,5 +34,6 @@ im = ti.get_pil_image()
 # os.remove(profile_result_file)
 
 res = find_boxes_mk2(im, (255, 255, 255), 40)
+print(len(res))
 
 putBoxesonImageTuples(ti.get_cv2_image(), res)
