@@ -33,7 +33,10 @@ im = ti.get_pil_image()
 # p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(40)
 # os.remove(profile_result_file)
 
-res = find_boxes_mk2(im, (255, 255, 255), 40)
+res = find_boxes_mk2(im, (255, 255, 255), 40, 2, 3)
 print(len(res))
 
 putBoxesonImageTuples(ti.get_cv2_image(), res)
+
+pil = ti.get_pil_image()
+pil.show()
