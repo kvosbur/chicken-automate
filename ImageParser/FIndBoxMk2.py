@@ -1,7 +1,7 @@
 from PIL import Image
 import time
 
-from typing import Tuple
+from typing import Tuple, List
 
 
 def overlaps_boxes(x, y, boxes):
@@ -30,14 +30,44 @@ def make_bools(pil_image: Image, allowed_color: Tuple[int, int, int]):
         for y in range(height):
             pixel = pixels[x, y]
             bool_row.append(
+                # (
+                #         pixel[0] != allowed_color[0]
+                #         or pixel[1] != allowed_color[1]
+                #         or pixel[2] != allowed_color[2]
+                # )
                 (
-                        pixel[0] != allowed_color[0]
-                        or pixel[1] != allowed_color[1]
-                        or pixel[2] != allowed_color[2]
+                        abs(pixel[0] - allowed_color[0]) > 2
+                        or abs(pixel[1] - allowed_color[1]) > 2
+                        or abs(pixel[2] - allowed_color[2]) > 2
                 )
             )
         bools.append(bool_row)
     return bools
+
+
+def converge_boxes(boxes: List[Tuple[int, int, int, int]]):
+    new_boxes = []
+    for box in boxes:
+        should_add = True
+        for new_box in new_boxes:
+            # if (box[3] == new_box[3] and (new_box[0] <= box[2] <= new_box[2] or new_box[0] <= box[0] <= new_box[2])) \
+            #         or (box[2] == new_box[2] and (new_box[1] <= box[3] <= new_box[3] or new_box[1] <= box[1] <= new_box[3])):
+            # same left/right
+            if box[0] == new_box[0] and box[2] == new_box[2]:
+                should_add = False
+                break
+            # same end lower right
+            elif box[2] == new_box[2] and box[3] == new_box[3]:
+                should_add = False
+                break
+            # slightly different lengths around same general area
+            elif abs(box[0] - new_box[0]) <= 20 and abs(box[1] - new_box[1]) <= 20 \
+                    and abs(box[2] - new_box[2]) <= 20 and abs(box[3] - new_box[3]) <= 20:
+                should_add = False
+                break
+        if should_add:
+            new_boxes.append(box)
+    return new_boxes
 
 
 def find_boxes(
@@ -70,7 +100,7 @@ def find_boxes(
                 # print("found_box", x, y, box, len(boxes))
                 # if len(boxes) >= 30:
                 #     return boxes
-    return boxes
+    return converge_boxes(boxes)
 
 
 def find_box(
