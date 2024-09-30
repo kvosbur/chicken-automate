@@ -1,7 +1,7 @@
 import os
 from appium import webdriver
 
-# from appium.webdriver.common.touch_action import TouchAction
+from appium.webdriver.common.touch_action import TouchAction
 import time
 
 # https://stackoverflow.com/questions/4032960/how-do-i-get-an-apk-file-from-an-android-device
@@ -24,7 +24,7 @@ ANDROID_BASE_CAPS = {
     # 'deviceName': os.getenv('ANDROID_DEVICE_VERSION') or 'Android Emulator',
     "name": "test-session",
     "appPackage": "com.auxbrain.egginc",
-    "app": "/Users/kvosburgh_mac/Desktop/Personal Projects/chicken-optim/eggInc.apk",
+    # "app": "/Users/kvosburgh_mac/Desktop/Personal Projects/chicken-optim/eggInc.apk",
     "udid": "RFCT70B6C8P",
     "appActivity": "com.auxbrain.egginc.EggIncActivity",
     "newCommandTimeout": 600,
@@ -49,16 +49,17 @@ class AppiumService:
     # Note that press_for_time is in milli-seconds
     def long_press_at_coords(self, x, y, press_for_time):
         print("do touch")
-        # action = TouchAction(self.driver)
-        # action.long_press(x=x, y=y, duration=press_for_time)
-        # action.perform()
+
+        action = TouchAction(self.driver)
+        action.long_press(x=x, y=y, duration=press_for_time)
+        action.perform()
         print("after touch")
 
     def tap_at_coords(self, x, y, count):
         print("do tap")
-        # action = TouchAction(self.driver)
-        # action.tap(x=x, y=y, count=count)
-        # action.perform()
+        action = TouchAction(self.driver)
+        action.tap(x=x, y=y, count=count)
+        action.perform()
 
     def get_page_source(self) -> str:
         return self.driver.page_source
