@@ -83,20 +83,31 @@ def find_boxes(
     y_step: int,
     start_x: int,
     start_y: int,
+    end_x: int = None,
+    end_y: int = None,
+    different_color_in_box: bool = True,
 ):
     start = time.time()
     bools = make_bools(pil_image, allowed_color)
     width, height = pil_image.size
 
+    actual_end_x = end_x
+    if actual_end_x is None:
+        actual_end_x = width
+
+    actual_end_y = end_y
+    if actual_end_y is None:
+        actual_end_y = height
+
     boxes = []
     all_boxes = []
-    for x in range(start_x, width, x_step):
+    for x in range(start_x, actual_end_x, x_step):
         # print(
         #     x,
         #     (time.time() - start) / 60,
         #     x / width * 100,
         # )
-        for y in range(start_y, height, y_step):
+        for y in range(start_y, actual_end_y, y_step):
             if overlaps_boxes(x, y, all_boxes):
                 continue
             box = find_box(
@@ -104,7 +115,7 @@ def find_boxes(
             )
             if box is not None:
                 all_boxes.append(box)
-                if validate_box(box, bools):
+                if not different_color_in_box or validate_box(box, bools):
                     boxes.append(box)
                 # print("found_box", x, y, box, len(boxes))
                 # if len(boxes) >= 30:
