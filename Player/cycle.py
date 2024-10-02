@@ -4,24 +4,30 @@ from Transformations.TransformationImage import TransformationImage
 from .chickenRun import do_action
 import subprocess
 from appiumService import AppiumService
+from ImageParser.GetUiComponents import (
+    get_ui_component_locations,
+    UIComponents,
+    get_welcome_back_position_if_present,
+)
 
 last_done = {}
 
-cycle_events = {
-    "chickenRun": 0
-}
+cycle_events = {"chickenRun": 0}
 images_identifier = ""
+
 
 def initializeLastDone():
     global last_done
     for key in cycle_events.keys():
         last_done[key] = time.time()
 
+
 def initialize():
     global images_identifier
     File_Manager_Instance._setup()
     images_identifier = File_Manager_Instance.generate_group_identifier()
     initializeLastDone()
+
 
 def take_screenshot() -> TransformationImage:
     before = time.time()
@@ -32,19 +38,36 @@ def take_screenshot() -> TransformationImage:
     print(time.time() - before)
     return TransformationImage(file_path, images_identifier)
 
-def do_cycle(appium_service):
+
+def do_cycle(appium_service, ui_components):
     now = time.time()
     next_image = take_screenshot()
     if now - last_done["chickenRun"] >= cycle_events["chickenRun"]:
-        do_action(next_image, appium_service)
+        do_action(
+            next_image,
+            appium_service,
+            ui_components[UIComponents.HatchBar],
+            ui_components[UIComponents.ChickenRunButton],
+        )
         last_done["chickenRun"] = now
+
 
 def run_player(appium_service: AppiumService):
     initialize()
     time.sleep(5)
+    welcome_back_accept_button = get_welcome_back_position_if_present()
+    if welcome_back_accept_button != None:
+        appium_service.tap_at_coords(
+            welcome_back_accept_button[0], welcome_back_accept_button[1], 1
+        )
+        # wait for dialog to disapper
+        time.sleep(2)
+    ui_components = get_ui_component_locations()
+
     while True:
-        do_cycle(appium_service)
+        do_cycle(appium_service, ui_components)
         time.sleep(1)
+
 
 def run_test(appium_service: AppiumService):
     print("wait for startup")
