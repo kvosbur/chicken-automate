@@ -56,12 +56,12 @@ def bestStringMatch(parsed_string, expected_strings):
             best = string
             bestValue = newRatio
 
-    return best, newRatio
+    return best, bestValue
 
 
 def parseImage(imageData, tesseract_option):
     parsedText = pytesseract.image_to_string(
-        imageData, config=f"--psm {tesseract_option.value} --user-words {strings_path}"
+        imageData, config=f"--psm {tesseract_option.value}"
     )
     # parsedText = pytesseract.image_to_string(imageData, config=f'--psm {tesseract_option.value} --user-words {strings_path}')
     # parsedText = pytesseract.image_to_string(imageData, config="--psm 6")  outputbase nobatch digits
@@ -121,8 +121,8 @@ def putBoxesonImageTuples(img, boxes):
         #     1,
         # )
 
-    cv2.imshow("Detected text", img)
-    cv2.waitKey(0)
+    # cv2.imshow("Detected text", img)
+    # cv2.waitKey(0)
 
 
 if __name__ == "__main__":

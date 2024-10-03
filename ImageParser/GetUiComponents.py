@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Tuple
-from .FIndBoxMk2 import find_boxes
+from .FindBoxMk2 import find_boxes
 from .ScreenshotHelper import take_screenshot
 from Transformations.TransformationImage import TransformationImage
 
