@@ -61,6 +61,10 @@ class AppiumService:
         action.tap(x=x, y=y, count=count)
         action.perform()
 
+    def drag(self, start_x, start_y, end_x, end_y):
+        action = TouchAction(self.driver)
+        action.press(x=start_x, y=start_y).move_to(x=end_x, y=end_y).release()
+
     def get_page_source(self) -> str:
         return self.driver.page_source
 

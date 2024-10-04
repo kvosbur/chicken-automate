@@ -53,7 +53,7 @@ def converge_boxes(boxes: List[Tuple[int, int, int, int]]):
             # if (box[3] == new_box[3] and (new_box[0] <= box[2] <= new_box[2] or new_box[0] <= box[0] <= new_box[2])) \
             #         or (box[2] == new_box[2] and (new_box[1] <= box[3] <= new_box[3] or new_box[1] <= box[1] <= new_box[3])):
             # same left/right
-            if box[0] == new_box[0] and box[2] == new_box[2]:
+            if box[0] == new_box[0] and box[2] == new_box[2] and new_box[1] > box[3]:
                 should_add = False
                 break
             # same end lower right

@@ -1,4 +1,4 @@
-from ImageParser.FIndBoxMk2 import find_boxes
+from ImageParser.FindBoxMk2 import find_boxes
 from Player.cycle import initialize, images_identifier, take_screenshot
 from Transformations.TransformationImage import TransformationImage
 from Transformations.Util.FileManager import File_Manager_Instance
@@ -12,16 +12,24 @@ from ImageParser.GetUiComponents import (
 from ImageParser.ScreenshotHelper import take_screenshot
 from appiumService import AppiumService
 import time
+from ImageParser.Dialogs import get_visible_dialogs, get_dialog_close
+from Player.Research import (
+    get_researches,
+    has_upgrade_green,
+    could_upgrade_grey,
+    check_box_color,
+)
+from ImageParser.Util import get_box_min_y_start
 
 
 def test_boxes_on_image(ti: TransformationImage):
     im = ti.get_pil_image()
 
-    color = (25, 172, 0)
-    min_size_x = 40
-    min_size_y = 10
-    x_step = 2
-    y_step = 2
+    color = (39, 110, 198)
+    min_size_x = (im.size[0] * 3) // 4
+    min_size_y = 100
+    x_step = 4
+    y_step = 4
     start_x = 0
     start_y = 0
     end_x = im.width
@@ -38,7 +46,7 @@ def test_boxes_on_image(ti: TransformationImage):
         start_y,
         end_x,
         end_y,
-        False,
+        True,
     )
 
     print(res)
@@ -51,7 +59,7 @@ def test_boxes_on_image(ti: TransformationImage):
 
 def find_color_by_cropping(ti: TransformationImage):
     im = ti.get_pil_image()
-    cropped = im.crop((510, 270, 600, 285))
+    cropped = im.crop((850, 1400, 1000, 1500))
     print(cropped.getpixel((50, 5)))
     ti.pil_image = cropped
     counts = {}
@@ -65,7 +73,8 @@ def find_color_by_cropping(ti: TransformationImage):
             # print(cropped.getpixel((x, y)))
 
     for key, value in counts.items():
-        print(key, value)
+        if value > 20:
+            print(key, value)
     cropped.show()
 
 
@@ -85,14 +94,27 @@ def test_startup():
     appium_service.long_press_at_coords(coords[0], coords[1], 5000)
 
 
-# take_screenshot()
-
 # test_startup()
 
 File_Manager_Instance._setup()
 identifier = File_Manager_Instance.generate_group_identifier()
 
-ti = TransformationImage("ImageParser/test-image.png", identifier)
+# take_screenshot()
+
+ti = TransformationImage("ImageParser/test-images/research-test1.png", identifier)
 # test_boxes_on_image(ti)
+
 # find_color_by_cropping(ti)
-print(get_ui_component_locations())
+# res = get_visible_blue_dialogs(ti)
+# dialog = get_visible_dialogs(ti)
+# res = get_dialog_close(ti, dialog[0], dialog[1])
+
+# res = get_purple_visible_dialogs(ti)
+
+# print(res)
+# print(get_ui_component_locations())
+
+# putBoxesonImageTuples(ti.get_cv2_image(), res)
+
+# pil = ti.get_pil_image()
+# pil.show()
