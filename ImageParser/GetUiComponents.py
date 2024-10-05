@@ -177,6 +177,7 @@ def get_egg_button(ti: TransformationImage):
 
 
 def get_ui_component_locations():
+    print("get ui elements")
     screenshot = take_screenshot()
     ui_components = {}
     # get bottom buttons

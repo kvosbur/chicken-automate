@@ -1,6 +1,6 @@
 from Transformations.TransformationImage import TransformationImage
 from ImageParser.FindBoxMk2 import find_boxes
-from typing import Tuple
+from typing import Tuple, List
 from enum import Enum
 
 blue_color = (39, 110, 198)
@@ -22,12 +22,12 @@ class ResearchBox:
     def __init__(
         self,
         box: Tuple[int, int, int, int],
-        upgrade_location: Tuple[int, int, int, int] | None,
+        upgrade_location: Tuple[int, int, int, int],
         state: ResearchStateEnum,
     ) -> None:
-        box = box
-        upgrade_location = upgrade_location
-        state = state
+        self.box = box
+        self.upgrade_location = upgrade_location
+        self.state = state
 
 
 def split_boxes_if_necessary(ti: TransformationImage, boxes: Tuple[int, int, int, int]):
@@ -116,7 +116,7 @@ def check_box_color(
     return res[-1] if len(res) > 0 else None
 
 
-def get_researches(ti: TransformationImage):
+def get_researches(ti: TransformationImage) -> List[ResearchBox]:
     boxes = get_research_boxes(ti)
     split_boxes = split_boxes_if_necessary(ti, boxes)
     sorted(split_boxes, key=lambda box: box[1])
@@ -134,4 +134,4 @@ def get_researches(ti: TransformationImage):
             continue
         categorized.append(ResearchBox(box, None, ResearchStateEnum.Finished))
 
-    return split_boxes
+    return categorized

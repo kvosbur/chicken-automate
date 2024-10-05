@@ -11,6 +11,7 @@ from appiumService import AppiumService
 green_pixel = (25, 172, 0)
 grey_pixel = (204, 204, 204)
 toggle_on = False
+previous_hatch_percent = 100
 
 
 def get_hatchery_percentage(image: TransformationImage, hatchery_location):
@@ -36,9 +37,11 @@ def do_action(
     hatchery_location,
     chicken_run_button,
 ):
-    global toggle_on
+    global toggle_on, previous_hatch_percent
     hatch_perc = get_hatchery_percentage(image, hatchery_location)
     print("Hatch %:", hatch_perc, toggle_on)
+    if toggle_on and previous_hatch_percent > hatch_perc:
+        toggle_on = False
     if hatch_perc > 0.65:
         if not toggle_on:
             toggle_on = True
@@ -48,3 +51,4 @@ def do_action(
     elif hatch_perc < 0.15:
         toggle_on = False
         appium_service.long_press_at_coords(0, chicken_run_button[1], 0.2)
+    previous_hatch_percent = hatch_perc

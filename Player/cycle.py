@@ -2,6 +2,7 @@ import time
 from Transformations.Util.FileManager import File_Manager_Instance
 from Transformations.TransformationImage import TransformationImage
 from .chickenRun import do_action
+from .Research import do_research_action
 import subprocess
 from appiumService import AppiumService
 from ImageParser.GetUiComponents import (
@@ -12,7 +13,7 @@ from ImageParser.GetUiComponents import (
 
 last_done = {}
 
-cycle_events = {"chickenRun": 0}
+cycle_events = {"chickenRun": 0, "research": 120}
 images_identifier = ""
 
 
@@ -42,6 +43,9 @@ def take_screenshot() -> TransformationImage:
 def do_cycle(appium_service, ui_components):
     now = time.time()
     next_image = take_screenshot()
+    if now - last_done["research"] >= cycle_events["research"]:
+        do_research_action(appium_service, ui_components)
+        last_done["research"] = now
     if now - last_done["chickenRun"] >= cycle_events["chickenRun"]:
         do_action(
             next_image,

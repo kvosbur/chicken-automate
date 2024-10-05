@@ -2,6 +2,7 @@ import os
 from appium import webdriver
 
 from appium.webdriver.common.touch_action import TouchAction
+from appium.webdriver.common.multi_action import MultiAction
 import time
 
 # https://stackoverflow.com/questions/4032960/how-do-i-get-an-apk-file-from-an-android-device
@@ -61,9 +62,16 @@ class AppiumService:
         action.tap(x=x, y=y, count=count)
         action.perform()
 
+    def multi_tap(self, coordinates, duration):
+        # action = MultiAction(self.driver)
+        print("multi tap", coordinates)
+        self.driver.tap(coordinates, duration)
+
     def drag(self, start_x, start_y, end_x, end_y):
         action = TouchAction(self.driver)
+        print("drag from", start_x, start_y, "to:", end_x, end_y)
         action.press(x=start_x, y=start_y).move_to(x=end_x, y=end_y).release()
+        action.perform()
 
     def get_page_source(self) -> str:
         return self.driver.page_source
