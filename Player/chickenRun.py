@@ -40,7 +40,7 @@ def do_action(
     global toggle_on, previous_hatch_percent
     hatch_perc = get_hatchery_percentage(image, hatchery_location)
     print("Hatch %:", hatch_perc, toggle_on)
-    if toggle_on and previous_hatch_percent > hatch_perc:
+    if toggle_on and previous_hatch_percent <= hatch_perc:
         toggle_on = False
     if hatch_perc > 0.65:
         if not toggle_on:

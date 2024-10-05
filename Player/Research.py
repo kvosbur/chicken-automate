@@ -32,6 +32,7 @@ def do_research_action(appium_service: AppiumService, ui_components):
         # swipe to move target to top of screen
         x = target.box[0] + (target.box[2] - target.box[0]) // 2
         appium_service.drag(x, target.box[1] + 20, x, researches[0].box[1] + 20)
+        time.sleep(0.2)
 
         # target not last item so no need to do again
         if target != researches[-1]:
