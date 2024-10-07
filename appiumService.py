@@ -57,7 +57,7 @@ class AppiumService:
         print("after touch")
 
     def tap_at_coords(self, x, y, count):
-        print("do tap")
+        print("do tap", x, y)
         action = TouchAction(self.driver)
         action.tap(x=x, y=y, count=count)
         action.perform()

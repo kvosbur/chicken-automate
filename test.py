@@ -21,6 +21,7 @@ from ImageParser.Research import (
 )
 from ImageParser.Util import get_box_min_y_start
 from Player.Research import do_research_action as do_research_action
+from Player.DiscoverComponents import discover_component_screen_locations
 
 
 def test_boxes_on_image(ti: TransformationImage):
@@ -102,12 +103,13 @@ identifier = File_Manager_Instance.generate_group_identifier()
 
 # take_screenshot()
 
-# ti = TransformationImage("ImageParser/test-images/research-test1.png", identifier)
+# ti = TransformationImage("ImageParser/test-images/failure-hen-housing.png", identifier)
 # test_boxes_on_image(ti)
 
 # find_color_by_cropping(ti)
 # res = get_visible_blue_dialogs(ti)
 # dialog = get_visible_dialogs(ti)
+# print(dialog)
 # res = get_dialog_close(ti, dialog[0], dialog[1])
 
 # res = get_purple_visible_dialogs(ti)
@@ -115,7 +117,7 @@ identifier = File_Manager_Instance.generate_group_identifier()
 # print(res)
 # print(get_ui_component_locations())
 
-# putBoxesonImageTuples(ti.get_cv2_image(), res)
+# putBoxesonImageTuples(ti.get_cv2_image(), [dialog[1], res])
 
 # pil = ti.get_pil_image()
 # pil.show()
@@ -131,4 +133,4 @@ if welcome_back_accept_button != None:
     # wait for dialog to disapper
     time.sleep(2)
 ui_components = get_ui_component_locations()
-do_research_action(appium_service, ui_components)
+discover_component_screen_locations(appium_service, ui_components)

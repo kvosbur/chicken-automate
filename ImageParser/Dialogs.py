@@ -101,7 +101,7 @@ def get_visible_blue_dialogs(ti: TransformationImage):
     # new_ti.pil_image.show()
 
     tess_im = new_ti.get_cv2_image()
-    results = parseImage(tess_im, TesseractOption.DEFAULT)
+    results = parseImage(tess_im, TesseractOption.UNIFORM_BLOCK)
 
     best_match = bestStringMatch(
         results.replace("\n", ""), list(Dialog_titles.values())
@@ -145,7 +145,7 @@ def get_visible_small_blue_dialogs(ti: TransformationImage):
     # new_ti.pil_image.show()
 
     tess_im = new_ti.get_cv2_image()
-    results = parseImage(tess_im, TesseractOption.DEFAULT)
+    results = parseImage(tess_im, TesseractOption.UNIFORM_BLOCK)
 
     best_match = bestStringMatch(
         results.replace("\n", ""), list(Dialog_titles.values())
@@ -187,7 +187,7 @@ def get_purple_visible_dialogs(ti: TransformationImage):
     # new_ti.pil_image.show()
 
     tess_im = new_ti.get_cv2_image()
-    results = parseImage(tess_im, TesseractOption.DEFAULT)
+    results = parseImage(tess_im, TesseractOption.UNIFORM_BLOCK)
 
     best_match = bestStringMatch(
         results.replace("\n", ""), list(Dialog_titles.values())
@@ -229,4 +229,4 @@ def get_dialog_close(
         end_y,
     )
 
-    return locations
+    return locations[0]
