@@ -111,7 +111,15 @@ def find_boxes(
             if overlaps_boxes(x, y, all_boxes):
                 continue
             box = find_box(
-                bools, width, height, min_size_x, min_size_y, x, y, x_step, y_step
+                bools,
+                actual_end_x,
+                actual_end_y,
+                min_size_x,
+                min_size_y,
+                x,
+                y,
+                x_step,
+                y_step,
             )
             if box is not None:
                 all_boxes.append(box)
