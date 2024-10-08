@@ -12,7 +12,7 @@ from ImageParser.GetUiComponents import (
 from ImageParser.ScreenshotHelper import take_screenshot
 from appiumService import AppiumService
 import time
-from ImageParser.Dialogs import get_visible_dialogs, get_dialog_close
+from ImageParser.Dialogs import get_visible_dialogs, get_dialog_close, Dialogs
 from ImageParser.Research import (
     get_researches,
     has_upgrade_green,
@@ -28,12 +28,12 @@ def test_boxes_on_image(ti: TransformationImage):
     im = ti.get_pil_image()
 
     color = (39, 110, 198)
-    min_size_x = (im.size[0] * 3) // 4
-    min_size_y = 100
+    min_size_x = 70
+    min_size_y = 50
     x_step = 4
     y_step = 4
     start_x = 0
-    start_y = 0
+    start_y = im.height // 3
     end_x = im.width
     end_y = im.height
 
@@ -90,10 +90,15 @@ def test_startup():
         )
         # wait for dialog to disapper
         time.sleep(2)
-    components = get_ui_component_locations()
 
-    coords = components[UIComponents.ChickenRunButton]
-    appium_service.long_press_at_coords(coords[0], coords[1], 5000)
+    temp_dialog_locs = {
+        Dialogs.Shipping: (930, 1612),
+        Dialogs.GrainSilos: (480, 1012),
+        Dialogs.HenHousing: (630, 712),
+    }
+    ui_components = get_ui_component_locations()
+    locs = discover_component_screen_locations(appium_service, ui_components)
+    print(locs)
 
 
 # test_startup()
@@ -103,8 +108,8 @@ identifier = File_Manager_Instance.generate_group_identifier()
 
 # take_screenshot()
 
-# ti = TransformationImage("ImageParser/test-images/failure-hen-housing.png", identifier)
-# test_boxes_on_image(ti)
+ti = TransformationImage("ImageParser/test-images/hen-housing-test.png", identifier)
+test_boxes_on_image(ti)
 
 # find_color_by_cropping(ti)
 # res = get_visible_blue_dialogs(ti)
@@ -121,16 +126,3 @@ identifier = File_Manager_Instance.generate_group_identifier()
 
 # pil = ti.get_pil_image()
 # pil.show()
-
-appium_service = AppiumService()
-
-time.sleep(5)
-welcome_back_accept_button = get_welcome_back_position_if_present()
-if welcome_back_accept_button != None:
-    appium_service.tap_at_coords(
-        welcome_back_accept_button[0], welcome_back_accept_button[1], 1
-    )
-    # wait for dialog to disapper
-    time.sleep(2)
-ui_components = get_ui_component_locations()
-discover_component_screen_locations(appium_service, ui_components)

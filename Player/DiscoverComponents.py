@@ -28,7 +28,7 @@ def discover_component_screen_locations(appium_service: AppiumService, ui_compon
             if dialog is not None:
                 # keep track of tap location for dialog if not discovered
                 if dialog[0] not in discovered:
-                    discovered[dialog[0]] = dialog[1]
+                    discovered[dialog[0]] = (x, y)
 
                 # close dialog
                 close_location = get_dialog_close(ti, dialog[0], dialog[1])
