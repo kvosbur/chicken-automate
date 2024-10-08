@@ -2,10 +2,7 @@ from Transformations.TransformationImage import TransformationImage
 from ImageParser.FindBoxMk2 import find_boxes
 from typing import Tuple, List
 from enum import Enum
-
-blue_color = (39, 110, 198)
-has_upgrade_green = (25, 172, 0)
-could_upgrade_grey = (128, 128, 128)
+from ImageParser.Colors import blue_color, has_upgrade_green, could_upgrade_grey
 
 
 class ResearchStateEnum(Enum):

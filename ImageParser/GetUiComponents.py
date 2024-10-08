@@ -3,6 +3,7 @@ from typing import Tuple
 from .FindBoxMk2 import find_boxes
 from .ScreenshotHelper import take_screenshot
 from Transformations.TransformationImage import TransformationImage
+from ImageParser.Colors import affirmation_green, white, hatcher_red
 
 
 def get_middle_from_box(box: Tuple[int, int, int, int]):
@@ -38,7 +39,7 @@ class UIComponents(Enum):
 def get_welcome_back_position_if_present():
     screenshot = take_screenshot()
     im = screenshot.get_pil_image()
-    color = (25, 172, 0)
+    color = affirmation_green
     min_size_x = 2 / 3 * im.size[0]
     min_size_y = 30
     x_step = 2
@@ -58,7 +59,7 @@ def get_welcome_back_position_if_present():
 
 def get_hatch_bar_location(ti: TransformationImage):
     im = ti.get_pil_image()
-    color = (25, 172, 0)
+    color = affirmation_green
     min_size_x = 40
     min_size_y = 10
     x_step = 2
@@ -129,7 +130,7 @@ def get_bottom_menu_buttons(ti: TransformationImage):
     im = ti.get_pil_image()
     locations = find_boxes(
         im,
-        (255, 255, 255),
+        white,
         80,
         80,
         2,
@@ -151,7 +152,7 @@ def get_bottom_menu_buttons(ti: TransformationImage):
 
 def get_chicken_run_button(ti: TransformationImage, start_y):
     im = ti.get_pil_image()
-    locations = find_boxes(im, (240, 13, 13), 100, 100, 2, 10, 0, start_y)
+    locations = find_boxes(im, hatcher_red, 100, 100, 2, 10, 0, start_y)
 
     if len(locations) == 0:
         raise Exception("Did not find chicken run button", locations)
@@ -163,7 +164,7 @@ def get_chicken_run_button(ti: TransformationImage, start_y):
 
 def get_egg_button(ti: TransformationImage):
     im = ti.get_pil_image()
-    locations = find_boxes(im, (255, 255, 255), im.size[0] // 2, 40, 4, 10, 0, 0)
+    locations = find_boxes(im, white, im.size[0] // 2, 40, 4, 10, 0, 0)
 
     if len(locations) == 0:
         raise Exception("Did not find reference for egg button", locations)

@@ -1,6 +1,7 @@
 from Transformations.TransformationImage import TransformationImage
 from ImageParser.FindBoxMk2 import find_boxes
 from ImageParser.Util import get_box_min_y_start
+from ImageParser.Colors import purple_dialog_color, blue_color, red_exit_dialog_color
 from ocr.tess import parseImage, TesseractOption, bestStringMatch
 from enum import Enum
 from typing import Tuple
@@ -35,10 +36,6 @@ blue_dialogs = [
 purple_dialogs = [Dialogs.Prestige]
 red_exit_dialogs = [Dialogs.Farm, Dialogs.Research]
 
-purple_header_color = (134, 0, 196)
-blue_header_color = (39, 110, 198)
-red_exit_color = (240, 13, 13)
-
 
 def get_dialog_name(dialog_value):
     for key in Dialog_titles.keys():
@@ -70,7 +67,7 @@ def get_visible_dialogs(ti: TransformationImage):
 
 def get_visible_blue_dialogs(ti: TransformationImage):
     im = ti.get_pil_image()
-    color = blue_header_color
+    color = blue_color
     min_size_x = 2 / 3 * im.size[0]
     min_size_y = 60
     x_step = 4
@@ -112,7 +109,7 @@ def get_visible_blue_dialogs(ti: TransformationImage):
 
 def get_visible_small_blue_dialogs(ti: TransformationImage):
     im = ti.get_pil_image()
-    color = blue_header_color
+    color = blue_color
     min_size_x = im.size[0] // 4
     min_size_y = 60
     x_step = 10
@@ -156,7 +153,7 @@ def get_visible_small_blue_dialogs(ti: TransformationImage):
 
 def get_purple_visible_dialogs(ti: TransformationImage):
     im = ti.get_pil_image()
-    color = purple_header_color
+    color = purple_dialog_color
     min_size_x = 2 / 3 * im.size[0]
     min_size_y = 60
     x_step = 4
@@ -202,11 +199,11 @@ def get_dialog_close(
     dialog_title_location: Tuple[int, int, int, int],
 ):
     im = ti.get_pil_image()
-    color = blue_header_color
+    color = blue_color
     if dialog_name in purple_dialogs:
-        color = purple_header_color
+        color = purple_dialog_color
     elif dialog_name in red_exit_dialogs:
-        color = red_exit_color
+        color = red_exit_dialog_color
     min_size_x = 10
     min_size_y = 10
     x_step = 1
