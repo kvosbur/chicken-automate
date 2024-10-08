@@ -22,6 +22,7 @@ from ImageParser.Research import (
 from ImageParser.Util import get_box_min_y_start
 from Player.Research import do_research_action as do_research_action
 from Player.DiscoverComponents import discover_component_screen_locations
+from Player.UILocations import UILocations
 
 
 def test_boxes_on_image(ti: TransformationImage):
@@ -96,9 +97,7 @@ def test_startup():
         Dialogs.GrainSilos: (480, 1012),
         Dialogs.HenHousing: (630, 712),
     }
-    ui_components = get_ui_component_locations()
-    locs = discover_component_screen_locations(appium_service, ui_components)
-    print(locs)
+    UILocations(appium_service)
 
 
 # test_startup()
@@ -108,13 +107,15 @@ identifier = File_Manager_Instance.generate_group_identifier()
 
 # take_screenshot()
 
-ti = TransformationImage("ImageParser/test-images/hen-housing-test.png", identifier)
-test_boxes_on_image(ti)
+ti = TransformationImage("ImageParser/test-images/research-test1.png", identifier)
+# test_boxes_on_image(ti)
 
 # find_color_by_cropping(ti)
 # res = get_visible_blue_dialogs(ti)
-# dialog = get_visible_dialogs(ti)
-# print(dialog)
+begin = time.time()
+dialog = get_researches(ti)
+print(dialog)
+print(time.time() - begin)
 # res = get_dialog_close(ti, dialog[0], dialog[1])
 
 # res = get_purple_visible_dialogs(ti)
