@@ -1,5 +1,5 @@
 from Transformations.TransformationImage import TransformationImage
-from ImageParser.FindBoxMk2 import find_boxes
+from ImageParser.FIndBoxMk2 import find_boxes
 from ImageParser.Util import get_box_min_y_start
 from ImageParser.Colors import purple_dialog_color, blue_color, red_exit_dialog_color
 from ocr.tess import parseImage, TesseractOption, bestStringMatch

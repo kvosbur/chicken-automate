@@ -20,9 +20,15 @@ def validate_box(box: Tuple[int, int, int, int], bools: Tuple[Tuple[bool]]):
     return False
 
 
-def make_bools(pil_image: Image, allowed_color: Tuple[int, int, int]):
+def make_bools(
+    pil_image: Image,
+    start_x: int,
+    end_x: int,
+    start_y: int,
+    end_y: int,
+    allowed_color: Tuple[int, int, int],
+):
     pixels = pil_image.load()
-    width, height = pil_image.size
     # pre process into bools
     return [
         [
@@ -31,9 +37,9 @@ def make_bools(pil_image: Image, allowed_color: Tuple[int, int, int]):
                 and -2 <= pixels[x, y][1] - allowed_color[1] <= 2
                 and -2 <= pixels[x, y][2] - allowed_color[2] <= 2
             )
-            for y in range(height)
+            for y in range(start_y, end_y)
         ]
-        for x in range(width)
+        for x in range(start_x, end_x)
     ]
     #         pixel[0] != allowed_color[0]
     #         or pixel[1] != allowed_color[1]
@@ -89,7 +95,6 @@ def find_boxes(
     different_color_in_box: bool = True,
 ):
     start = time.time()
-    bools = make_bools(pil_image, allowed_color)
     width, height = pil_image.size
 
     actual_end_x = end_x
@@ -99,6 +104,10 @@ def find_boxes(
     actual_end_y = end_y
     if actual_end_y is None:
         actual_end_y = height
+
+    bools = make_bools(
+        pil_image, start_x, actual_end_x, start_y, actual_end_y, allowed_color
+    )
 
     boxes = []
     all_boxes = []
@@ -113,12 +122,12 @@ def find_boxes(
                 continue
             box = find_box(
                 bools,
-                actual_end_x,
-                actual_end_y,
+                actual_end_x - start_x,
+                actual_end_y - start_y,
                 min_size_x,
                 min_size_y,
-                x,
-                y,
+                x - start_x,
+                y - start_y,
                 x_step,
                 y_step,
             )
@@ -130,7 +139,11 @@ def find_boxes(
                 # if len(boxes) >= 30:
                 #     return boxes
     print(time.time() - start)
-    return converge_boxes(boxes)
+    absolute_coords_boxes = [
+        (box[0] + start_x, box[1] + start_y, box[2] + start_x, box[3] + start_y)
+        for box in boxes
+    ]
+    return converge_boxes(absolute_coords_boxes)
 
 
 def find_box(

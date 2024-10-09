@@ -1,4 +1,4 @@
-from ImageParser.FindBoxMk2 import find_boxes
+from ImageParser.FIndBoxMk2 import find_boxes
 from Player.cycle import initialize, images_identifier, take_screenshot
 from Transformations.TransformationImage import TransformationImage
 from Transformations.Util.FileManager import File_Manager_Instance

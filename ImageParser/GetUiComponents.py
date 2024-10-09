@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Tuple
-from .FindBoxMk2 import find_boxes
+from .FIndBoxMk2 import find_boxes
 from .ScreenshotHelper import take_screenshot
 from Transformations.TransformationImage import TransformationImage
 from ImageParser.Colors import affirmation_green, white, hatcher_red

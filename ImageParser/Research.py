@@ -1,5 +1,5 @@
 from Transformations.TransformationImage import TransformationImage
-from ImageParser.FindBoxMk2 import find_boxes
+from ImageParser.FIndBoxMk2 import find_boxes
 from typing import Tuple, List
 from enum import Enum
 from ImageParser.Colors import blue_color, has_upgrade_green, could_upgrade_grey
