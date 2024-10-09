@@ -15,34 +15,35 @@ def overlaps_boxes(x, y, boxes):
 def validate_box(box: Tuple[int, int, int, int], bools: Tuple[Tuple[bool]]):
     for x in range(box[0], box[2] + 1):
         for y in range(box[1], box[3] + 1):
-            if bools[x][y]:
+            if not bools[x][y]:
                 return True
     return False
 
 
 def make_bools(pil_image: Image, allowed_color: Tuple[int, int, int]):
-    bools = []
     pixels = pil_image.load()
     width, height = pil_image.size
     # pre process into bools
-    for x in range(width):
-        bool_row = []
-        for y in range(height):
-            pixel = pixels[x, y]
-            bool_row.append(
-                # (
-                #         pixel[0] != allowed_color[0]
-                #         or pixel[1] != allowed_color[1]
-                #         or pixel[2] != allowed_color[2]
-                # )
-                (
-                    abs(pixel[0] - allowed_color[0]) > 2
-                    or abs(pixel[1] - allowed_color[1]) > 2
-                    or abs(pixel[2] - allowed_color[2]) > 2
-                )
+    return [
+        [
+            (
+                -2 <= pixels[x, y][0] - allowed_color[0] <= 2
+                and -2 <= pixels[x, y][1] - allowed_color[1] <= 2
+                and -2 <= pixels[x, y][2] - allowed_color[2] <= 2
             )
-        bools.append(bool_row)
-    return bools
+            for y in range(height)
+        ]
+        for x in range(width)
+    ]
+    #         pixel[0] != allowed_color[0]
+    #         or pixel[1] != allowed_color[1]
+    #         or pixel[2] != allowed_color[2]
+    # )
+    # (
+    #     abs(pixel[0] - allowed_color[0]) > 2
+    #     or abs(pixel[1] - allowed_color[1]) > 2
+    #     or abs(pixel[2] - allowed_color[2]) > 2
+    # )
 
 
 def converge_boxes(boxes: List[Tuple[int, int, int, int]]):
@@ -128,6 +129,7 @@ def find_boxes(
                 # print("found_box", x, y, box, len(boxes))
                 # if len(boxes) >= 30:
                 #     return boxes
+    print(time.time() - start)
     return converge_boxes(boxes)
 
 
@@ -144,13 +146,13 @@ def find_box(
 ):
     # move right
     for x in range(start_x, width, step_x):
-        if bools[x][start_y]:
+        if not bools[x][start_y]:
             break
         if x - start_x < min_size_x:
             continue
         # move down
         for y in range(start_y, height, step_y):
-            if bools[x][y]:
+            if not bools[x][y]:
                 break
             if y - start_y < min_size_y:
                 continue
@@ -159,7 +161,7 @@ def find_box(
 
             # verify bottom
             for bottom_x in range(start_x, x, step_x):
-                if bools[bottom_x][y]:
+                if not bools[bottom_x][y]:
                     is_correct = False
                     break
             if not is_correct:
@@ -167,7 +169,7 @@ def find_box(
 
             # verify left
             for left_y in range(start_y, y, step_y):
-                if bools[start_x][left_y]:
+                if not bools[start_x][left_y]:
                     is_correct = False
                     break
 

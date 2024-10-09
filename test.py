@@ -23,6 +23,10 @@ from ImageParser.Util import get_box_min_y_start
 from Player.Research import do_research_action as do_research_action
 from Player.DiscoverComponents import discover_component_screen_locations
 from Player.UILocations import UILocations
+import cProfile
+import pstats
+from pstats import SortKey
+import os
 
 
 def test_boxes_on_image(ti: TransformationImage):
@@ -100,6 +104,17 @@ def test_startup():
     UILocations(appium_service)
 
 
+def profile_thing(ti: TransformationImage):
+    profile_result_file = "results"
+    print("Running profiler")
+
+    cProfile.run("get_researches(ti)", profile_result_file)
+
+    p = pstats.Stats(profile_result_file)
+    p.strip_dirs().sort_stats(SortKey.CUMULATIVE).print_stats(40)
+    os.remove(profile_result_file)
+
+
 # test_startup()
 
 File_Manager_Instance._setup()
@@ -109,12 +124,14 @@ identifier = File_Manager_Instance.generate_group_identifier()
 
 ti = TransformationImage("ImageParser/test-images/research-test1.png", identifier)
 # test_boxes_on_image(ti)
+# profile_thing(ti)
 
 # find_color_by_cropping(ti)
 # res = get_visible_blue_dialogs(ti)
 begin = time.time()
 dialog = get_researches(ti)
-print(dialog)
+res = [dia.box for dia in dialog]
+[print(dia.box, dia.state) for dia in dialog]
 print(time.time() - begin)
 # res = get_dialog_close(ti, dialog[0], dialog[1])
 
@@ -123,7 +140,7 @@ print(time.time() - begin)
 # print(res)
 # print(get_ui_component_locations())
 
-# putBoxesonImageTuples(ti.get_cv2_image(), [dialog[1], res])
+putBoxesonImageTuples(ti.get_cv2_image(), res)
 
-# pil = ti.get_pil_image()
-# pil.show()
+pil = ti.get_pil_image()
+pil.show()
