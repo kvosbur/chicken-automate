@@ -23,6 +23,23 @@ class DiscoveredDialog:
         self.close_coords = close_coords
 
 
+def get_egg_button_dialog_info(appium_service: AppiumService, ui_components):
+    # open farm dialog
+    open_coords = ui_components[UIComponents.EggButton]
+    appium_service.tap_at_coords(open_coords[0], open_coords[1], 1)
+    time.sleep(0.5)
+
+    ti = take_screenshot()
+
+    # get dialog info
+    dialog = get_visible_dialogs(ti)
+    close_location = get_dialog_close(ti, dialog[0], dialog[1])
+    close_coord = get_middle_from_box(close_location)
+    appium_service.tap_at_coords(close_coord[0], close_coord[1], 1)
+
+    return DiscoveredDialog(dialog[0], open_coords, dialog[1], close_coord)
+
+
 def discover_component_screen_locations(
     appium_service: AppiumService, ui_components
 ) -> Dict[Dialogs, DiscoveredDialog]:
@@ -69,4 +86,5 @@ def discover_component_screen_locations(
         if not continue_processing:
             break
 
+    discovered[Dialogs.Farm] = get_egg_button_dialog_info(appium_service, ui_components)
     return discovered
