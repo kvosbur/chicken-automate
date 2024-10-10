@@ -131,6 +131,10 @@ ti = TransformationImage("ImageParser/test-images/research-test1.png", identifie
 begin = time.time()
 dialog = get_researches(ti)
 res = [dia.box for dia in dialog]
+upgrade_loc = []
+for dia in dialog:
+    if dia.upgrade_location is not None:
+        upgrade_loc.append(dia.upgrade_location)
 [print(dia.box, dia.state) for dia in dialog]
 print(time.time() - begin)
 # res = get_dialog_close(ti, dialog[0], dialog[1])
@@ -140,7 +144,7 @@ print(time.time() - begin)
 # print(res)
 # print(get_ui_component_locations())
 
-putBoxesonImageTuples(ti.get_cv2_image(), res)
+putBoxesonImageTuples(ti.get_cv2_image(), res + upgrade_loc)
 
 pil = ti.get_pil_image()
 pil.show()

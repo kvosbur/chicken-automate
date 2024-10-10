@@ -24,8 +24,10 @@ def make_bools(
     pil_image: Image,
     start_x: int,
     end_x: int,
+    step_x: int,
     start_y: int,
     end_y: int,
+    step_y: int,
     allowed_color: Tuple[int, int, int],
 ):
     pixels = pil_image.load()
@@ -37,9 +39,9 @@ def make_bools(
                 and -2 <= pixels[x, y][1] - allowed_color[1] <= 2
                 and -2 <= pixels[x, y][2] - allowed_color[2] <= 2
             )
-            for y in range(start_y, end_y)
+            for y in range(start_y, end_y, step_y)
         ]
-        for x in range(start_x, end_x)
+        for x in range(start_x, end_x, step_x)
     ]
     #         pixel[0] != allowed_color[0]
     #         or pixel[1] != allowed_color[1]
@@ -69,10 +71,10 @@ def converge_boxes(boxes: List[Tuple[int, int, int, int]]):
                 break
             # slightly different lengths around same general area
             elif (
-                abs(box[0] - new_box[0]) <= 20
-                and abs(box[1] - new_box[1]) <= 20
-                and abs(box[2] - new_box[2]) <= 20
-                and abs(box[3] - new_box[3]) <= 20
+                abs(box[0] - new_box[0]) <= 4
+                and abs(box[1] - new_box[1]) <= 4
+                and abs(box[2] - new_box[2]) <= 4
+                and abs(box[3] - new_box[3]) <= 4
             ):
                 should_add = False
                 break
@@ -106,30 +108,32 @@ def find_boxes(
         actual_end_y = height
 
     bools = make_bools(
-        pil_image, start_x, actual_end_x, start_y, actual_end_y, allowed_color
+        pil_image,
+        start_x,
+        actual_end_x,
+        x_step,
+        start_y,
+        actual_end_y,
+        y_step,
+        allowed_color,
     )
+    limited_width = len(bools)
+    limited_height = len(bools[0])
 
     boxes = []
     all_boxes = []
-    for x in range(start_x, actual_end_x, x_step):
-        # print(
-        #     x,
-        #     (time.time() - start) / 60,
-        #     x / width * 100,
-        # )
-        for y in range(start_y, actual_end_y, y_step):
+    for x in range(limited_width):
+        for y in range(limited_height):
             if overlaps_boxes(x, y, all_boxes):
                 continue
             box = find_box(
                 bools,
-                actual_end_x - start_x,
-                actual_end_y - start_y,
-                min_size_x,
-                min_size_y,
-                x - start_x,
-                y - start_y,
-                x_step,
-                y_step,
+                limited_width,
+                limited_height,
+                min_size_x // x_step,
+                min_size_y // y_step,
+                x,
+                y,
             )
             if box is not None:
                 all_boxes.append(box)
@@ -138,11 +142,16 @@ def find_boxes(
                 # print("found_box", x, y, box, len(boxes))
                 # if len(boxes) >= 30:
                 #     return boxes
-    print(time.time() - start)
     absolute_coords_boxes = [
-        (box[0] + start_x, box[1] + start_y, box[2] + start_x, box[3] + start_y)
+        (
+            start_x + (box[0] * x_step),
+            start_y + (box[1] * y_step),
+            start_x + (box[2] * x_step),
+            start_y + (box[3] * y_step),
+        )
         for box in boxes
     ]
+    print(time.time() - start)
     return converge_boxes(absolute_coords_boxes)
 
 
@@ -154,17 +163,15 @@ def find_box(
     min_size_y: int,
     start_x: int,
     start_y: int,
-    step_x: int,
-    step_y: int,
 ):
     # move right
-    for x in range(start_x, width, step_x):
+    for x in range(start_x, width):
         if not bools[x][start_y]:
             break
         if x - start_x < min_size_x:
             continue
         # move down
-        for y in range(start_y, height, step_y):
+        for y in range(start_y, height):
             if not bools[x][y]:
                 break
             if y - start_y < min_size_y:
@@ -173,7 +180,7 @@ def find_box(
             is_correct = True
 
             # verify bottom
-            for bottom_x in range(start_x, x, step_x):
+            for bottom_x in range(start_x, x):
                 if not bools[bottom_x][y]:
                     is_correct = False
                     break
@@ -181,7 +188,7 @@ def find_box(
                 continue
 
             # verify left
-            for left_y in range(start_y, y, step_y):
+            for left_y in range(start_y, y):
                 if not bools[start_x][left_y]:
                     is_correct = False
                     break
