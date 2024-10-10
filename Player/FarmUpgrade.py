@@ -9,6 +9,7 @@ from Transformations.TransformationImage import TransformationImage
 from ImageParser.Colors import has_upgrade_green
 from typing import Tuple
 from .UILocations import UILocations
+from .ConfirmationDialog import select_yes_from_confirmation_dialog
 import time
 
 
@@ -40,14 +41,26 @@ def farm_has_upgrade_boxes(ti: TransformationImage):
     )
 
 
-def do_farm_upgrade(appium_service: AppiumService, ui_locations: UILocations):
+def open_farm_dialog(appium_service: AppiumService, ui_locations: UILocations):
     dialog_config = ui_locations.dialogs[Dialogs.Farm]
     open_coords = dialog_config.open_from_coords
-    close_coords = dialog_config.close_coords
 
     # open dialog
     appium_service.tap_at_coords(open_coords[0], open_coords[1], 1)
     time.sleep(0.5)
+
+
+def close_farm_dialog(appium_service: AppiumService, ui_locations: UILocations):
+    dialog_config = ui_locations.dialogs[Dialogs.Farm]
+    close_coords = dialog_config.close_coords
+
+    # open dialog
+    appium_service.tap_at_coords(close_coords[0], close_coords[1], 1)
+    time.sleep(0.5)
+
+
+def do_farm_upgrade(appium_service: AppiumService, ui_locations: UILocations):
+    open_farm_dialog(appium_service, ui_locations)
 
     ti = take_screenshot()
 
@@ -55,7 +68,11 @@ def do_farm_upgrade(appium_service: AppiumService, ui_locations: UILocations):
     tappable_coordinates = farm_has_upgrade_boxes(ti)
     if len(tappable_coordinates) > 0:
         print("Upgrading Farm")
-        appium_service.multi_tap(tappable_coordinates, 0.1)
+        appium_service.tap_at_coords(
+            tappable_coordinates[0][0], tappable_coordinates[0][1], 0.1
+        )
+        time.sleep(0.5)
+        # tap yes confirmation
+        select_yes_from_confirmation_dialog(appium_service)
 
-    # tap dialog close
-    appium_service.tap_at_coords(close_coords[0], close_coords[1], 1)
+    close_farm_dialog(appium_service, ui_locations)

@@ -1,6 +1,6 @@
 from Transformations.TransformationImage import TransformationImage
 import pprint
-from .util import pixel_same, search_image
+from .util import pixel_same
 from appiumService import AppiumService
 
 
