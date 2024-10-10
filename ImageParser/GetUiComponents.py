@@ -131,8 +131,8 @@ def get_bottom_menu_buttons(ti: TransformationImage):
     locations = find_boxes(
         im,
         white,
-        80,
-        80,
+        72,
+        72,
         2,
         4,
         0,

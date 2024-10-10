@@ -10,6 +10,7 @@ from ImageParser.GetUiComponents import (
     UIComponents,
     get_welcome_back_position_if_present,
 )
+from .UILocations import UILocations
 from .DiscoverComponents import discover_component_screen_locations
 
 last_done = {}
@@ -41,18 +42,18 @@ def take_screenshot() -> TransformationImage:
     return TransformationImage(file_path, images_identifier)
 
 
-def do_cycle(appium_service, ui_components):
+def do_cycle(appium_service, ui_locations: UILocations):
     now = time.time()
     next_image = take_screenshot()
-    # if now - last_done["research"] >= cycle_events["research"]:
-    #     do_research_action(appium_service, ui_components)
-    #     last_done["research"] = now
+    if now - last_done["research"] >= cycle_events["research"]:
+        do_research_action(appium_service, ui_locations)
+        last_done["research"] = now
     if now - last_done["chickenRun"] >= cycle_events["chickenRun"]:
         do_action(
             next_image,
             appium_service,
-            ui_components[UIComponents.HatchBar],
-            ui_components[UIComponents.ChickenRunButton],
+            ui_locations.ui_components[UIComponents.HatchBar],
+            ui_locations.ui_components[UIComponents.ChickenRunButton],
         )
         last_done["chickenRun"] = now
 
@@ -67,13 +68,10 @@ def run_player(appium_service: AppiumService):
         )
         # wait for dialog to disapper
         time.sleep(2)
-    ui_components = get_ui_component_locations()
-    # dialog_start_locations = discover_component_screen_locations(
-    #     appium_service, ui_components
-    # )
+    ui_locations = UILocations(appium_service)
 
     while True:
-        do_cycle(appium_service, ui_components)
+        do_cycle(appium_service, ui_locations)
         time.sleep(1)
 
 

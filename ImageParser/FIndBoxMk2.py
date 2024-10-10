@@ -71,10 +71,10 @@ def converge_boxes(boxes: List[Tuple[int, int, int, int]]):
                 break
             # slightly different lengths around same general area
             elif (
-                abs(box[0] - new_box[0]) <= 4
-                and abs(box[1] - new_box[1]) <= 4
-                and abs(box[2] - new_box[2]) <= 4
-                and abs(box[3] - new_box[3]) <= 4
+                abs(box[0] - new_box[0]) <= 20
+                and abs(box[1] - new_box[1]) <= 20
+                and abs(box[2] - new_box[2]) <= 20
+                and abs(box[3] - new_box[3]) <= 20
             ):
                 should_add = False
                 break
@@ -151,7 +151,7 @@ def find_boxes(
         )
         for box in boxes
     ]
-    print(time.time() - start)
+    # print(time.time() - start)
     return converge_boxes(absolute_coords_boxes)
 
 

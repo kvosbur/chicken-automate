@@ -2,12 +2,13 @@ from appiumService import AppiumService
 from ImageParser.GetUiComponents import UIComponents, get_middle_from_box
 from ImageParser.Research import get_researches, ResearchStateEnum
 from ImageParser.ScreenshotHelper import take_screenshot
+from .UILocations import UILocations
 import time
 
 
-def do_research_action(appium_service: AppiumService, ui_components):
+def do_research_action(appium_service: AppiumService, ui_locations: UILocations):
     # open research menu
-    research_button_coords = ui_components[UIComponents.ResearchButton]
+    research_button_coords = ui_locations.ui_components[UIComponents.ResearchButton]
     print(research_button_coords)
     appium_service.tap_at_coords(
         research_button_coords[0], research_button_coords[1], 1
