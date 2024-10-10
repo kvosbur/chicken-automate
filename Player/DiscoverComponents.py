@@ -43,17 +43,21 @@ def discover_component_screen_locations(
             ti = take_screenshot()
             dialog = get_visible_dialogs(ti)
             if dialog is not None:
-                # close dialog
-                close_location = get_dialog_close(ti, dialog[0], dialog[1])
-                close_coord = get_middle_from_box(close_location)
-                appium_service.tap_at_coords(close_coord[0], close_coord[1], 1)
-                time.sleep(0.4)
-
                 # keep track of tap location for dialog if not discovered
                 if dialog[0] not in discovered:
+                    # close dialog
+                    close_location = get_dialog_close(ti, dialog[0], dialog[1])
+                    close_coord = get_middle_from_box(close_location)
+                    appium_service.tap_at_coords(close_coord[0], close_coord[1], 1)
+
                     discovered[dialog[0]] = DiscoveredDialog(
                         dialog[0], (x, y), dialog[1], close_coord
                     )
+                else:
+                    close_coords = discovered[dialog[0]].close_coords
+                    appium_service.tap_at_coords(close_coords[0], close_coords[1], 1)
+
+                time.sleep(0.4)
 
             continue_processing = False
             for searchable_dialog in all_searchable_dialogs:

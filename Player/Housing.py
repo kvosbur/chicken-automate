@@ -2,9 +2,11 @@ from appiumService import AppiumService
 from ImageParser.ScreenshotHelper import take_screenshot
 from ImageParser.GetUiComponents import get_middle_from_box
 from ImageParser.FIndBoxMk2 import find_boxes
+from ImageParser.Dialogs import Dialogs
 from Transformations.TransformationImage import TransformationImage
 from ImageParser.Colors import blue_color
 from typing import Tuple
+from .UILocations import UILocations
 import time
 
 
@@ -36,17 +38,22 @@ def get_coordinates_of_max_upgradeables(ti: TransformationImage):
     return [get_middle_from_box(box) for box in res]
 
 
-def do_housing_action(
-    appium_service: AppiumService, coords: Tuple[int, int], close_coords
-):
+def do_housing_action(appium_service: AppiumService, ui_locations: UILocations):
+    dialog_config = ui_locations.dialogs[Dialogs.HenHousing]
+    open_coords = dialog_config.open_from_coords
+    close_coords = dialog_config.close_coords
+
     # open dialog
-    appium_service.tap_at_coords(coords[0], coords[1], 1)
+    appium_service.tap_at_coords(open_coords[0], open_coords[1], 1)
     time.sleep(0.5)
 
     ti = take_screenshot()
 
     # get upgradeable coordinates
     tappable_coordinates = get_coordinates_of_max_upgradeables(ti)
-    appium_service.multi_tap(tappable_coordinates, 0.1)
+    if len(tappable_coordinates) > 0:
+        print("Upgrading Hen Houses")
+        appium_service.multi_tap(tappable_coordinates, 0.1)
 
     # tap dialog close
+    appium_service.tap_at_coords(close_coords[0], close_coords[1], 1)
