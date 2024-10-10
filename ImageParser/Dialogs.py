@@ -52,15 +52,15 @@ def prep_return_value(result):
 def get_visible_dialogs(ti: TransformationImage):
     blue_dialogs = get_visible_blue_dialogs(ti)
     if blue_dialogs is not None and blue_dialogs[0][1] > 0.7:
-        print("blue")
+        # print("blue")
         return prep_return_value(blue_dialogs)
     blue_small_dialogs = get_visible_small_blue_dialogs(ti)
     if blue_small_dialogs is not None and blue_small_dialogs[0][1] > 0.7:
-        print("small blue")
+        # print("small blue")
         return prep_return_value(blue_small_dialogs)
     purple_dialogs = get_purple_visible_dialogs(ti)
     if purple_dialogs is not None and purple_dialogs[0][1] > 0.7:
-        print("purple")
+        # print("purple")
         return prep_return_value(purple_dialogs)
     return None
 

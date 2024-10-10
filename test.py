@@ -12,11 +12,10 @@ from ImageParser.GetUiComponents import (
 from ImageParser.ScreenshotHelper import take_screenshot
 from appiumService import AppiumService
 import time
+from ImageParser.Colors import blue_color, background_dialog_grey
 from ImageParser.Dialogs import get_visible_dialogs, get_dialog_close, Dialogs
 from ImageParser.Research import (
     get_researches,
-    has_upgrade_green,
-    could_upgrade_grey,
     check_box_color,
 )
 from ImageParser.Util import get_box_min_y_start
@@ -32,13 +31,13 @@ import os
 def test_boxes_on_image(ti: TransformationImage):
     im = ti.get_pil_image()
 
-    color = (39, 110, 198)
-    min_size_x = 70
-    min_size_y = 50
+    color = background_dialog_grey
+    min_size_x = (im.width * 3) // 4
+    min_size_y = 70
     x_step = 4
     y_step = 4
     start_x = 0
-    start_y = im.height // 3
+    start_y = im.height // 4
     end_x = im.width
     end_y = im.height
 
@@ -66,7 +65,7 @@ def test_boxes_on_image(ti: TransformationImage):
 
 def find_color_by_cropping(ti: TransformationImage):
     im = ti.get_pil_image()
-    cropped = im.crop((850, 1400, 1000, 1500))
+    cropped = im.crop((200, 1360, 1000, 1380))
     print(cropped.getpixel((50, 5)))
     ti.pil_image = cropped
     counts = {}
@@ -122,21 +121,21 @@ identifier = File_Manager_Instance.generate_group_identifier()
 
 # take_screenshot()
 
-ti = TransformationImage("ImageParser/test-images/research-test1.png", identifier)
-# test_boxes_on_image(ti)
+ti = TransformationImage("ImageParser/test-images/shipping-test.png", identifier)
+test_boxes_on_image(ti)
 # profile_thing(ti)
 
 # find_color_by_cropping(ti)
 # res = get_visible_blue_dialogs(ti)
-begin = time.time()
-dialog = get_researches(ti)
-res = [dia.box for dia in dialog]
-upgrade_loc = []
-for dia in dialog:
-    if dia.upgrade_location is not None:
-        upgrade_loc.append(dia.upgrade_location)
-[print(dia.box, dia.state) for dia in dialog]
-print(time.time() - begin)
+# begin = time.time()
+# dialog = get_researches(ti)
+# res = [dia.box for dia in dialog]
+# upgrade_loc = []
+# for dia in dialog:
+#     if dia.upgrade_location is not None:
+#         upgrade_loc.append(dia.upgrade_location)
+# [print(dia.box, dia.state) for dia in dialog]
+# print(time.time() - begin)
 # res = get_dialog_close(ti, dialog[0], dialog[1])
 
 # res = get_purple_visible_dialogs(ti)
@@ -144,7 +143,7 @@ print(time.time() - begin)
 # print(res)
 # print(get_ui_component_locations())
 
-putBoxesonImageTuples(ti.get_cv2_image(), res + upgrade_loc)
+# putBoxesonImageTuples(ti.get_cv2_image(), res)
 
-pil = ti.get_pil_image()
-pil.show()
+# pil = ti.get_pil_image()
+# pil.show()

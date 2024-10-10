@@ -4,6 +4,7 @@ from Transformations.TransformationImage import TransformationImage
 from .chickenRun import do_action
 from .Research import do_research_action
 from .Housing import do_housing_action
+from .Shipping import do_shipping_action
 import subprocess
 from appiumService import AppiumService
 from ImageParser.GetUiComponents import (
@@ -16,7 +17,7 @@ from .DiscoverComponents import discover_component_screen_locations
 
 last_done = {}
 
-cycle_events = {"chickenRun": 0, "research": 60, "henHousing": 60}
+cycle_events = {"chickenRun": 0, "research": 120, "henHousing": 600, "shipping": 600}
 images_identifier = ""
 
 
@@ -52,6 +53,9 @@ def do_cycle(appium_service, ui_locations: UILocations):
     elif now - last_done["henHousing"] >= cycle_events["henHousing"]:
         do_housing_action(appium_service, ui_locations)
         last_done["henHousing"] = now
+    if now - last_done["shipping"] >= cycle_events["shipping"]:
+        do_shipping_action(appium_service, ui_locations)
+        last_done["shipping"] = now
     elif now - last_done["chickenRun"] >= cycle_events["chickenRun"]:
         do_action(
             next_image,

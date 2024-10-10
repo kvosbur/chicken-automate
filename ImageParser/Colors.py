@@ -3,6 +3,7 @@ purple_dialog_color = (134, 0, 196)
 blue_color = (39, 110, 198)
 red_exit_dialog_color = (240, 13, 13)
 affirmation_green = (25, 172, 0)
+background_dialog_grey = (191, 191, 191)
 
 # research colors
 has_upgrade_green = (25, 172, 0)
