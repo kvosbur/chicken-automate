@@ -135,5 +135,7 @@ Transformations/ScratchDirectory/
 # don't add apk files
 *.apk
 
+apks/*
+
 **/.DS_Store
 .DS_Store
