@@ -8,11 +8,14 @@ import time
 # https://stackoverflow.com/questions/4032960/how-do-i-get-an-apk-file-from-an-android-device
 # adb shell pm list packages
 # adb shell pm path com.auxbrain.egginc
-# adb pull /data/app/~~tweXlYiQgWJQJgvXJMtepw==/com.auxbrain.egginc-FWJI9t5kEQOcevIqVQZziA==/base.apk ./eggInc.apk
+# adb pull /data/app/~~Ma7I8LwTM5i6QkuRo7t-GQ==/com.auxbrain.egginc-XFV6VdyPInA9M0rQ4UyD0g==/base.apk ./eggInc.apk
 # https://stackoverflow.com/questions/12698814/get-launchable-activity-name-of-package-from-adb
 # /Users/kvosburgh_mac/Library/Android/sdk/build-tools/31.0.0/aapt dump configurations eggInc.apk
 # alternative below
 # adb shell pm dump com.auxbrain.egginc | grep -A 1 MAIN
+# adb shell pm clear com.auxbrain.egginc
+# scrcpy --turn-screen-off --stay-awake --no-audio --record=file.mp4 --print-fps --no-control
+# Not good for debugging, but final: scrcpy --turn-screen-off --stay-awake --no-audio --record=file.mp4 --no-window --no-control
 
 # get screenshot: adb exec-out screencap -p > screen.png
 

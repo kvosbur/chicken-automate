@@ -12,7 +12,7 @@ from ImageParser.GetUiComponents import (
 from ImageParser.ScreenshotHelper import take_screenshot
 from appiumService import AppiumService
 import time
-from ImageParser.Colors import blue_color, affirmation_green
+from ImageParser.Colors import blue_color, white
 from ImageParser.Dialogs import get_visible_dialogs, get_dialog_close, Dialogs
 from ImageParser.Research import (
     get_researches,
@@ -31,15 +31,15 @@ import os
 def test_boxes_on_image(ti: TransformationImage):
     im = ti.get_pil_image()
 
-    color = affirmation_green
-    min_size_x = 200
-    min_size_y = 65
-    x_step = 4
-    y_step = 10
-    start_x = 0
-    start_y = im.height // 4
+    color = white
+    min_size_x = 35
+    min_size_y = 35
+    x_step = 2
+    y_step = 2
+    start_x = (im.width * 3) // 4
+    start_y = 0
     end_x = im.width
-    end_y = im.height
+    end_y = im.height // 2
 
     res = find_boxes(
         im,
@@ -119,10 +119,10 @@ def profile_thing(ti: TransformationImage):
 File_Manager_Instance._setup()
 identifier = File_Manager_Instance.generate_group_identifier()
 
-# take_screenshot()
+take_screenshot()
 
-ti = TransformationImage("ImageParser/test-images/are-you-sure-dia.png", identifier)
-test_boxes_on_image(ti)
+ti = TransformationImage("ImageParser/test-images/test-image.png", identifier)
+# test_boxes_on_image(ti)
 # profile_thing(ti)
 
 # find_color_by_cropping(ti)
