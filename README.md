@@ -32,23 +32,23 @@ Learned items:
 
 
 COMING BACK PRIORITY:
-- Chicken run
+- Chicken run  X
     - tap when high percent
     - tap away when low percent
-- Research
+- Research  X
     - Get boxes around individual items
     - know if item is at top
     - scroll item to top
     - tap and hold any item if green
         - holding could have downsides of how it handles stuff, but would speed up if it has many upgrades possible
     - Scroll past top items if they are finished
-- Housing
+- Housing   X
     - Rely on base position when loading in
     - Initial guess taps until it opens up
         - Question: How to verify that dialog is for housing?
     - Add new house if able
     - Prioritize new houses over upgrading existing (if possible)
-- Shipping
+- Shipping   X
     - Rely on base position when loading in
     - Initial guess taps until it opens up
         - Question: How to verify that dialog is for shipping?
@@ -60,12 +60,12 @@ COMING BACK PRIORITY:
         - look for lots of grey space
         - if grey space present then you swiped to the end
         - otherwise make reasonable swipes based on items present
-- Farm Upgrade
+- Farm Upgrade  X
     - ALready know egg location
     - Need to occasionally click and see if button is grey or green
     - If green then click
         - Reset any internal state as needed
-- Prestige
+- Prestige   X
     - Already know egg location
     - Navigate from blue button there
     - When the hell to press?
