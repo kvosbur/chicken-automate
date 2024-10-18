@@ -31,15 +31,15 @@ import os
 def test_boxes_on_image(ti: TransformationImage):
     im = ti.get_pil_image()
 
-    color = white
-    min_size_x = 35
-    min_size_y = 35
+    color = blue_color
+    min_size_x = 120
+    min_size_y = 50
     x_step = 2
     y_step = 2
-    start_x = (im.width * 3) // 4
+    start_x = 0
     start_y = 0
     end_x = im.width
-    end_y = im.height // 2
+    end_y = im.height
 
     res = find_boxes(
         im,
@@ -119,10 +119,12 @@ def profile_thing(ti: TransformationImage):
 File_Manager_Instance._setup()
 identifier = File_Manager_Instance.generate_group_identifier()
 
-take_screenshot()
+# take_screenshot()
 
-ti = TransformationImage("ImageParser/test-images/test-image.png", identifier)
-# test_boxes_on_image(ti)
+ti = TransformationImage(
+    "ImageParser/test-images-to-handle/in-game-privacy-dia.png", identifier
+)
+test_boxes_on_image(ti)
 # profile_thing(ti)
 
 # find_color_by_cropping(ti)
