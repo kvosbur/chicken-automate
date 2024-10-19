@@ -23,3 +23,9 @@ def get_box_max_y_start(boxes: Tuple[int, int, int, int]):
 
 def get_middle_from_box(box: Tuple[int, int, int, int]):
     return (box[0] + ((box[2] - box[0]) // 2), box[1] + ((box[3] - box[1]) // 2))
+
+
+def alter_coords(
+    coord: Tuple[int, int], x_change: int, y_change: int
+) -> Tuple[int, int]:
+    return (coord[0] - x_change, coord[1] - y_change)

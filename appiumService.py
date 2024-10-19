@@ -3,6 +3,7 @@ from appium import webdriver
 
 from appium.webdriver.common.touch_action import TouchAction
 from appium.webdriver.common.multi_action import MultiAction
+from appium.options.android import UiAutomator2Options
 import time
 
 # https://stackoverflow.com/questions/4032960/how-do-i-get-an-apk-file-from-an-android-device
@@ -13,7 +14,7 @@ import time
 # /Users/kvosburgh_mac/Library/Android/sdk/build-tools/31.0.0/aapt dump configurations eggInc.apk
 # alternative below
 # adb shell pm dump com.auxbrain.egginc | grep -A 1 MAIN
-# adb shell pm clear com.auxbrain.egginc
+# adb shell am force-stop com.auxbrain.egginc && adb shell pm clear com.auxbrain.egginc
 # scrcpy --turn-screen-off --stay-awake --no-audio --record=file.mp4 --print-fps --no-control
 # Not good for debugging, but final: scrcpy --turn-screen-off --stay-awake --no-audio --record=file.mp4 --no-window --no-control
 
@@ -26,10 +27,11 @@ ANDROID_BASE_CAPS = {
     "platformName": "Android",
     "platformVersion": os.getenv("ANDROID_PLATFORM_VERSION") or "12.0",
     # 'deviceName': os.getenv('ANDROID_DEVICE_VERSION') or 'Android Emulator',
-    "name": "test-session",
+    # "name": "test-session",
     "appPackage": "com.auxbrain.egginc",
     # "app": "/Users/kvosburgh_mac/Desktop/Personal Projects/chicken-optim/eggInc.apk",
-    "udid": "RFCT70B6C8P",
+    # "udid": "RFCT70B6C8P", # personal device
+    "udid": "R58MB1C5NGW",  # test device
     "appActivity": "com.auxbrain.egginc.EggIncActivity",
     "newCommandTimeout": 600,
     "noReset": True,
@@ -39,15 +41,19 @@ ANDROID_BASE_CAPS = {
     "skipLogcatCapture": True,
 }
 
-EXECUTOR = "http://127.0.0.1:4723/wd/hub"
+EXECUTOR = "http://127.0.0.1:4723"
+# EXECUTOR = "http://127.0.0.1:4723/wd/hub"
 
 
 class AppiumService:
 
     def __init__(self) -> None:
-        self.driver = webdriver.Remote(
-            command_executor=EXECUTOR, desired_capabilities=ANDROID_BASE_CAPS
-        )
+        options = UiAutomator2Options()
+        options.load_capabilities(ANDROID_BASE_CAPS)
+        # self.driver = webdriver.Remote(
+        #     command_executor=EXECUTOR, desired_capabilities=ANDROID_BASE_CAPS
+        # )
+        self.driver = webdriver.Remote(command_executor=EXECUTOR, options=options)
         print("done initializing")
 
     # Note that press_for_time is in milli-seconds
@@ -61,9 +67,10 @@ class AppiumService:
 
     def tap_at_coords(self, x, y, count):
         print("do tap", x, y)
-        action = TouchAction(self.driver)
-        action.tap(x=x, y=y, count=count)
-        action.perform()
+        self.multi_tap([[x, y]], 0.1)
+        # action = TouchAction(self.driver)
+        # action.tap(x=x, y=y, count=count)
+        # action.perform()
 
     def multi_tap(self, coordinates, duration):
         # action = MultiAction(self.driver)

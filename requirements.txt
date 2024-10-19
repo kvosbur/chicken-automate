@@ -1,7 +1,7 @@
 pytesseract
 pillow
 opencv-python
-Appium-Python-Client
+Appium-Python-Client < 4.0.0
 progressbar2
 progressbar
 matplotlib

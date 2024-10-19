@@ -22,6 +22,7 @@ from ImageParser.Util import get_box_min_y_start
 from Player.Research import do_research_action as do_research_action
 from Player.DiscoverComponents import discover_component_screen_locations
 from Player.UILocations import UILocations
+from Player.Tutorial import get_past_tutorial
 import cProfile
 import pstats
 from pstats import SortKey
@@ -103,6 +104,13 @@ def test_startup():
     UILocations(appium_service)
 
 
+def test_start_from_beginning():
+    appium_service = AppiumService()
+    get_past_tutorial(appium_service)
+    ui_components = UILocations(appium_service)
+    print(ui_components.ui_components, ui_components.dialogs)
+
+
 def profile_thing(ti: TransformationImage):
     profile_result_file = "results"
     print("Running profiler")
@@ -124,7 +132,8 @@ identifier = File_Manager_Instance.generate_group_identifier()
 ti = TransformationImage(
     "ImageParser/test-images-to-handle/in-game-privacy-dia.png", identifier
 )
-test_boxes_on_image(ti)
+# test_boxes_on_image(ti)
+test_start_from_beginning()
 # profile_thing(ti)
 
 # find_color_by_cropping(ti)
