@@ -136,6 +136,7 @@ Transformations/ScratchDirectory/
 *.apk
 
 apks/*
+Player/location_cache.json
 
 **/.DS_Store
 .DS_Store

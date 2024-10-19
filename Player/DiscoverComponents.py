@@ -3,6 +3,7 @@ from ImageParser.GetUiComponents import UIComponents, get_middle_from_box
 from ImageParser.Dialogs import get_visible_dialogs, get_dialog_close, Dialogs
 from ImageParser.ScreenshotHelper import take_screenshot
 from ImageParser.Util import get_middle_from_box
+from .UILocations import UILocations
 import time
 from typing import Tuple, Dict
 
@@ -41,7 +42,9 @@ def get_egg_button_dialog_info(appium_service: AppiumService, ui_components):
 
 
 def discover_component_screen_locations(
-    appium_service: AppiumService, ui_components
+    appium_service: AppiumService,
+    ui_components: UIComponents,
+    ui_locations: UILocations,
 ) -> Dict[Dialogs, DiscoveredDialog]:
     research_button = ui_components[UIComponents.ResearchButton]
     bottom_y = research_button[1] - 100
@@ -55,24 +58,21 @@ def discover_component_screen_locations(
 
     for y in range(bottom_y, 0, -300):
         for x in range(max_x - 150, 50, -150):
+            if ui_locations.has_tapped_at_location([x, y]):
+                continue
             appium_service.tap_at_coords(x, y, 1)
             time.sleep(0.4)
             ti = take_screenshot()
             dialog = get_visible_dialogs(ti)
             if dialog is not None:
                 # keep track of tap location for dialog if not discovered
-                if dialog[0] not in discovered:
-                    # close dialog
-                    close_location = get_dialog_close(ti, dialog[0], dialog[1])
-                    close_coord = get_middle_from_box(close_location)
-                    appium_service.tap_at_coords(close_coord[0], close_coord[1], 1)
+                close_location = get_dialog_close(ti, dialog[0], dialog[1])
+                close_coord = get_middle_from_box(close_location)
+                appium_service.tap_at_coords(close_coord[0], close_coord[1], 1)
 
-                    discovered[dialog[0]] = DiscoveredDialog(
-                        dialog[0], (x, y), dialog[1], close_coord
-                    )
-                else:
-                    close_coords = discovered[dialog[0]].close_coords
-                    appium_service.tap_at_coords(close_coords[0], close_coords[1], 1)
+                ui_locations.add_discovered_dialog(
+                    DiscoveredDialog(dialog[0], (x, y), dialog[1], close_coord)
+                )
 
                 time.sleep(0.4)
 
@@ -83,6 +83,7 @@ def discover_component_screen_locations(
 
             if not continue_processing:
                 break
+            ui_locations.add_tapped_location([x, y])
         if not continue_processing:
             break
 
